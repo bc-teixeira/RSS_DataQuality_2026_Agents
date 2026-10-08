@@ -1,0 +1,1404 @@
+
+> Please search all published material from Tom Redman, Roger Hoerl and
+  Rosemary Tate focusing on data quality evaluation. My goal is to create a
+  skill with the best practices for data quality checks and evaluation.
+  Please ask any clarifying questions if needed.
+  /run-skill-generator
+
+● Failed to authenticate: OAuth session expired and could not be
+  refreshed
+
+> Try again
+  ⎿  14 skills available
+
+● I'll look at the workspace, load the skill-creator skill, and then research
+  the three authors' published work before building the skill.
+
+  Searched for 1 pattern (ctrl+o to expand)
+
+● Skill(anthropic-skills:skill-creator)
+  ⎿  Successfully loaded skill
+
+  Read 1 file (ctrl+o to expand)
+
+● 4 background agents launched (↓ to manage)
+   ├ Research Tom Redman data quality
+   ├ Research Roger Hoerl data quality
+   ├ Research Rosemary Tate data quality
+   └ Research joint Redman-Hoerl-Tate work
+
+  Searched for 1 pattern, read 2 files (ctrl+o to expand)
+
+● Research agents are running in the background. While they work, I'll check the
+  Python environment for the eval scripts later and set up the skill folder
+  location in the repo.
+
+  Read 1 file, ran 2 shell commands (ctrl+o to expand)
+
+● Python 3.14 with pandas, numpy and matplotlib is available, so the skill can
+  bundle a pandas-based checking script. The four research agents (one per
+  author plus one for their joint RSS work) are still running. I'll draft the
+  skill once their reports arrive.
+
+● Agent "Research Tom Redman data quality" finished · 4m 34s
+
+● The Redman report is in. I'll save it as a source file for the skill's
+  references folder while the other three agents finish.
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● Saved. Waiting on the remaining three research agents (Hoerl, Tate, and joint
+  RSS work) before drafting the skill.
+
+● Agent "Research joint Redman-Hoerl-Tate work" finished · 6m 25s
+
+● The joint-work report is in and it ties directly to your repo: the 22 October
+  2026 Edinburgh conference where Redman and Hoerl keynote and Tate runs the
+  "Data Quality Under the Lens" column. Saving it now.
+
+  Read 1 file (ctrl+o to expand)
+
+● Two of four reports are saved. Still waiting on the Hoerl and Tate agents
+  before drafting the skill.
+
+● Agent "Research Roger Hoerl data quality" finished · 8m 55s
+
+  Read 1 file (ctrl+o to expand)
+
+● Three of four reports are saved. Only the Rosemary Tate agent is still
+  running, and its results matter for the health-records angle, so I'll wait for
+  it before drafting.
+
+● Agent "Research Rosemary Tate data quality" finished · 11m 49s
+
+● All four research reports are in. Saving the Tate notes, then I'll draft the
+  skill.
+
+  Read 1 file (ctrl+o to expand)
+
+● I'll create the data-quality-evaluation skill in .claude/skills/, targeting
+  tabular data checks and DQ-plan design, bundled with a pandas script for
+  mechanical checks and citations only to verified material. · summary
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The heredoc tripped over the shell on Windows, so I'll write the content files
+  directly. Writing SKILL.md, the five reference files, the rules format and
+  report template in parallel.
+
+● Write(.claude\skills\data-quality-evaluation\SKILL.md)
+  ⎿  Wrote 222 lines to .claude\skills\data-quality-evaluation\SKILL.md
+      1 ---
+      2 name: data-quality-evaluation
+         and produce an evidence-based data quality report, following the
+         published methods of Tom Redman (Friday Afternoon Measurement, p
+        erfect-record score, rule of ten, fix at source), Roger Hoerl (da
+        t", SPC on data) and Rosemary Tate (tiered definitions, triangula
+        tion, unit-by-period metrics, failure patterns, initial data anal
+        ysis). Use this skill whenever someone asks to check, assess, pro
+        stry, EHR or claims data, or asks "can I trust this data", "is th
+        is dat
+     … +349 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\redman.md)
+  ⎿  Wrote 120 lines to
+     .claude\skills\data-quality-evaluation\references\redman.md
+       1 # Tom Redman: measuring and managing data quality
+       3 Thomas C. Redman ("the Data Doc", Data Quality Solutions) built
+         the managerial school of data quality from his
+         aluation* is a small set of simple, repeatable
+       5 measurements and a vocabulary that connects them to cost and to
+       6
+       7 ## 1. Friday Afternoon Measurement (FAM)
+       9 Source: HBR, "Assess Whether You Have a Data Quality Problem" (J
+         uly 2016); Nagle, Redman and Sammon, HBR
+          2017) and *Business Horizons* 63(3) 2020;
+     … +177 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\hoerl.md)
+  ⎿  Wrote 123 lines to
+     .claude\skills\data-quality-evaluation\references\hoerl.md
+      1 # Roger Hoerl: data pedigree, statistical thinking and the "right
+      2
+      3 Roger W. Hoerl (Union College; formerly GE Global Research), most
+        ly with Ron Snee and more recently with Tom
+        on: understand the process that produced the
+      5 data before analysing it, quantify variation, and ask whether the
+      6
+      7 ## 1. Statistical thinking
+      8
+        ance* (3rd ed. 2020). Three principles:
+     … +181 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\tate.md)  ⎿  Wrote 128 lines to
+     .claude\skills\data-quality-evaluation\references\tate.md
+       1 # Rosemary Tate: data quality in routinely collected and coded d
+       2
+       3 Dr A. Rosemary Tate (Chartered Statistician; formerly Brighton a
+       4 Sussex; RSS AI Task Force) spent a decade measuring data quality
+       5 writes the RSS Real World Data Science "Data Quality Under the L
+         ens" column. Her work is the most concrete
+         ries, claims and any other data captured as
+       7 codes by busy people under incentives.
+       9 Her framework uses the UK Audit Commission's six dimensions: **a
+      10 relevance, completeness**, with measu
+     … +197 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\pedigree-questions.md)
+  ⎿  Wrote 58 lines to .claude\skills\data-quality-evaluation\references\pe
+     digree-questions.md
+       1 # Data pedigree interview
+       3 Use these questions when the data source is unfamiliar. Ask the
+         user or the documentation; where neither
+         ferred". Unanswered questions go into the
+       5 report's limitations section. The framing follows Hoerl and Snee
+       6 where, why, how" provenance standard adopted by the RWDS Data Qu
+         ality Under the Lens column.
+       8 ## Why (purpose of collection)
+       9
+         l care, regulatory reporting, marketing,
+     … +77 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\rules-format.md)
+  ⎿  Wrote 58 lines to
+     .claude\skills\data-quality-evaluation\references\rules-format.md
+       1 # rules.json format for scripts/dq_profile.py
+       3 Rules encode the data customer's definition of "error" for each
+         critical data element (CDE). Keep them traceable
+       4 to Step 1 of the workflow: every rule should be explainable as "
+       5
+       6 ```json
+       8   "placeholders": ["", "NA", "N/A", "NULL", "null", "None", "-",
+          "?", "UNKNOWN", "9999", "-999", "999"],
+       9   "columns": {
+         : "^P\\d{6}$"},
+     … +71 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\report-template.md)
+  ⎿  Wrote 90 lines to
+     .claude\skills\data-quality-evaluation\references\report-template.md
+       1 # Data quality evaluation report template
+       2
+       3 Use these headings. Each section lists what belongs in it and th
+       4 a reader who stops after the first paragraph must know whether t
+         o use the data.
+       5
+       6 ```markdown
+       8
+       9 ## Verdict
+      10 ```
+     … +113 lines (ctrl+o to expand)
+
+● Write(.claude\skills\data-quality-evaluation\references\bibliography.md)
+  ⎿  Wrote 90 lines to
+     .claude\skills\data-quality-evaluation\references\bibliography.md
+       1 # Bibliography
+       2
+          confirm are omitted. Cite by author, year and
+       4 venue; URLs are for the reader's convenience.
+       5
+       7
+       8 Books
+       9 - Redman, T.C. (1992). *Data Quality: Management and Technology*
+      10 - Redman, T.C. (1996). *Data Quality for the Information Age*. A
+         rtech House.
+     … +213 lines (ctrl+o to expand)
+
+● SKILL.md and seven reference files are written. Now the profiler script and a
+  generator for synthetic test data with planted defects.
+
+● Write(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Wrote 581 lines to
+     .claude\skills\data-quality-evaluation\scripts\dq_profile.py
+       1 #!/usr/bin/env python
+       3 dq_profile.py - mechanical data quality profiling in the spirit
+         of Redman, Hoerl and Tate.
+       4
+       6   * initial data analysis: shape, types, empty/constant/high-car
+         dinality columns, placeholder values,
+       8   * completeness, validity (rules), uniqueness, cross-field cons
+         istency per critical data element (CDE)
+       9   * the record-level perfect-record score (Redman's Friday After
+      10   * an error Pareto
+     … +741 lines (ctrl+o to expand)
+
+  Made 1 scratchpad edit +106, ran 1 shell command (ctrl+o to expand)
+
+● Test data generated. Now I'll write a rules file and test the profiler against
+  the diabetes extract.
+
+  Made 1 scratchpad edit +21, ran 1 shell command (ctrl+o to expand)
+
+● The profiler caught all the planted defects — the date spike, out-of-control
+  practices, duplicates, sex-coding issues, Type 1 cases missing insulin, and
+  deaths before diagnosis — but I found two bugs: cross-field rules double-count
+  missing values as failures, and bimodality checks fire incorrectly on
+  ID/binary columns. I'll fix both, re-run on both datasets, and write up the
+  eval definitions. · summary
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 3 lines, removed 2 lines
+      169  
+      170  def _bimodality_hint(x: pd.Series):
+      171      """Crude bimodality coefficient; > 0.555 suggests more tha
+           n one mode (unit mix, mixed definitions)."""
+      172 -    if len(x) < 30 or x.std() == 0:                           
+      173 -        return None                                           
+      172 +    nun = x.nunique()                                         
+      173 +    if len(x) < 30 or x.std() == 0 or nun < 20 or nun / len(x)
+          + > 0.9:                                                       
+      174 +        return None  # too few values, categorical-like, or ID
+          +-like                                                         
+      175      z = (x - x.mean()) / x.std()
+      176      n = len(x)
+      177      skew = float((z ** 3).mean())
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 5 lines, removed 2 lines
+      251          try:
+      252              ok = parsed.eval(cf["expr"], engine="python")
+      253              ok = pd.Series(ok, index=parsed.index)
+      254 -            # NA -> pass; missingness is already counted      
+      255 -            fail = (~ok.astype("boolean").fillna(True)).astype
+          -(bool)                                                        
+      254 +            # Rows with a missing value in any referenced colu
+          +mn pass this rule: missingness is already                     
+      255 +            # counted by the column rules, and comparisons wit
+          +h NaT/NaN silently return False.                              
+      256 +            referenced = [c for c in parsed.columns if re.sear
+          +ch(rf"(?<![\w.]){re.escape(str(c))}(?![\w])", cf["expr"])]    
+      257 +            has_na = parsed[referenced].isna().any(axis=1) if 
+          +referenced else pd.Series(False, index=parsed.index)          
+      258 +            fail = (~ok.astype("boolean").fillna(True)).astype
+          +(bool) & ~has_na                                              
+      259              errors[f"rule: {name}"] = fail
+      260          except Exception as exc:  # keep going; report the bro
+           ken rule
+      261              errors[f"rule: {name} (FAILED TO EVALUATE: {exc})"
+           ] = pd.Series(False, index=parsed.index)
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 2 lines
+      289      cum = 0
+      290      rows = []
+      291      for name, c in counts.items():
+      292 +        if c == 0:                                            
+      293 +            continue                                          
+      294          cum += c
+      295          rows.append({"error_type": name, "count": int(c), "sha
+           re_pct": round(100 * c / total, 2) if total else 0,
+      296                       "cumulative_pct": round(100 * cum / total
+           , 2) if total else 0})
+
+● Write(.claude\skills\data-quality-evaluation\evals\evals.json)
+  ⎿  Wrote 60 lines to
+     .claude\skills\data-quality-evaluation\evals\evals.json
+      1 {
+      3   "evals": [
+      4     {
+      6       "prompt": "I've got an extract from our GP diabetes registr
+        y at evals/files/diabetes_registry_extract.csv. We want to use it
+        oss the 8 practices for a paper. Can you check the data quality a
+        nd tell me whether it's usable for that? Columns are patient_id,
+        dm_type (T1 / T2 / Unspecified / Proxy, where Proxy means a 'seen
+         in diabetic clinic' type code), hba1c_mmol_mol, bmi, insulin_rx,
+         I can share with the stud
+     … +142 lines (ctrl+o to expand)
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The fixes check out — cross-field counts match the planted defects, and
+  bimodality correctly flags only HbA1c and the lab value column. I'll also make
+  the summary note when scoring only reflects missingness due to no rules file,
+  then set up the eval workspace and launch all six test runs (three with the
+  skill, three without). · summary
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 4 lines
+      446                   f"{'Meets' if s['meets_97_bar'] else 'Does no
+           t meet'} the bar. {s['redman_benchmark']}\n")
+      447          L.append("This automated score counts only errors a ru
+           le anticipated; it is a lower bound on the true error rate. "
+      448                   "Do the human pass on the FAM worksheet to ca
+           tch the rest.\n")
+      449 +        if not result.get("rules_file"):                      
+      450 +            L.append("**No rules file was supplied**, so the s
+          +core reflects missing values and placeholders only. "         
+      451 +                     "Write a rules.json from the data custome
+          +r's error definitions (ranges, allowed values, "              
+      452 +                     "cross-field checks) and re-run; see refe
+          +rences/rules-format.md.\n")                                   
+      453      L.append("## Critical data elements\n")
+      454      L.append("| Column | Completeness % | Nulls | Placeholders
+            | Invalid | Out of range | Duplicates | Weak/proxy |")
+      455      L.append("|---|---|---|---|---|---|---|---|")
+
+  Made 3 scratchpad edits +55 (ctrl+o to expand)
+
+● 6 background agents launched (↓ to manage)
+   ├ Eval 1 with skill
+   ├ Eval 1 baseline no skill
+   ├ Eval 2 with skill
+   ├ Eval 2 baseline no skill
+   ├ Eval 3 with skill
+   └ Eval 3 baseline no skill
+
+● Six eval runs are in progress. While they work, I'll check the aggregation and
+  viewer scripts' options, and record the project context in memory.
+
+  Searched for 2 patterns, read 1 file, searched memories, wrote 2 memories (ctrl+o to expand)
+
+● The agents write to <config>/outputs/, while the aggregation script expects
+  <config>/run-1/. I'll move the outputs into a run-1 folder once each run
+  finishes, which keeps both the viewer and the benchmark aggregator happy.
+  Waiting on the six runs now.
+
+› Message from general-purpose
+  ## Sanity check of hba1c_lab_results.csv (baseline run, no skills used)
+
+  **Bottom line for the user:** Do not build the dashboard on this file as-is.
+  One issue would make it flatly wrong (Site_C shows 100% "controlled" every
+  quarter), and four others shift numbers or create reporting traps. After
+  cleaning, all four sites land at 32-38% of patients with HbA1c < 53 mmol/mol.
+
+  File: 2,460 rows, 4 sites, 2023Q1-2024Q4, 1,652 distinct patient_ids, no
+  blanks, all dates/numbers parse, single analyte and single unit label
+  (`mmol/mol`).
+
+  ### Issues found (ranked)
+
+  1. **BLOCKER - Site_C values are NGSP percent mislabelled as mmol/mol.** All
+  629 Site_C values are 0-11.4 (median 7.5); other sites median 57-59.
+  Converting with IFCC `(% - 2.15) x 10.929` gives median 58.5 / p5-p95
+  35.5-82.5, matching the other sites almost exactly. Naive metric: Site_C =
+  100% < 53 in every quarter; after conversion 23-43% (33.7% overall). True for
+  all 8 quarters, so systematic at the feed. Recommend confirming with Site_C
+  LIS, fixing at source, and adding a guard rule (value < 15 => treat as % and
+  flag) rather than hard-coding Site_C.
+  2. **HIGH - 6 more %-scale values leaked into Sites A/B/D** (values 6.0-18.6;
+  patients 502823, 501230, 502811, 501466, 502323, 501131). Same guard rule
+  handles them.
+  3. **HIGH - 42 rows with value = 0** (1.7%, all sites, all quarters).
+  Impossible HbA1c; almost certainly missing coded as 0. Naively they all count
+  as "controlled". Exclude from numerator and denominator; effect 1-4 pp per
+  site-quarter.
+  4. **MEDIUM - 60 exact duplicate rows** (2.4%, all sites/quarters). No
+  near-duplicates, so `drop_duplicates()` is safe.
+  5. **MEDIUM - Site_B result-entry lag is 30-119 days (median 77) vs 0-39
+  (median ~19) at other sites**, consistently across all quarters. 42 of 79
+  Site_B rows for 2024Q4 were entered on/after 2025-02-01, so the latest quarter
+  for Site_B will be about half-complete at a typical refresh and will drift.
+  Recommend a per-site data-currency indicator and a ~120-day embargo on the
+  latest quarter for Site_B.
+  6. **LOW for this metric / HIGH if reused - patient_id looks site-local.** 456
+  of 1,652 IDs appear at 2+ sites; all sites use the same 500000-502999 range;
+  observed distinct-ID count (1,652) matches independent per-site sampling
+  (~1,665); cross-site "same patient" values are no more similar than random
+  pairs (median range 16.9 vs 13.8 mmol/mol). Fine for a per-site denominator;
+  do not use for network-wide unique counts or cross-site linkage without
+  confirmation.
+  7. **Minor:** 30 values at 20-30 mmol/mol at A/B/D (plausible but unusual;
+  flagged, kept); one 104.1 (kept); 25 patient-site-quarters with 2 tests, 12 of
+  which straddle 53 (need an explicit rule; I used latest test in quarter);
+  Site_C 2024Q4 volume dip (58 vs 73-96, not explained by lag); quarter should
+  be based on test_date not result_entered_date.
+
+  ### Naive vs cleaned metric (% patients < 53, overall across quarters)
+  Site_A 38.9 -> 38.3; Site_B 39.0 -> 37.3; Site_C 100.0 -> 33.7; Site_D 33.2 ->
+  31.7. Full per-quarter table in report.md.
+
+  ### Assumptions stated (user could not be asked)
+  Site_C is NGSP % (not e.g. Mono-S); 0 = missing; quarter on test_date; latest
+  test per patient per site per quarter; denominator = patient_id within site;
+  20-30 values kept as valid.
+
+  ### Outputs saved to
+  `C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb-OneDrive---Bris
+  tol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentation-RSS-DataQual
+  ity-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-workspace\
+  iteration-1\eval-2-lab-unit-mix\without_skill\outputs\`
+  - `report.md` (final answer to the user), `user_notes.md` (assumptions,
+  uncertainties, workarounds)
+  - `profile.py` / `profile_output.txt` (structural profile), `deep.py` /
+  `deep_output.txt` (issue checks + impact simulation)
+  - `flagged_rows.csv` (779 flagged source rows with flag columns),
+  `naive_prop_under53.csv`, `cleaned_prop_under53.csv`
+  - `fig1_value_distribution_by_site.png`, `fig2_entry_lag_by_site.png`,
+  `fig3_metric_naive_vs_cleaned.png`
+
+  ### Workarounds
+  - The outputs path exceeds the Windows working-directory length limit, so
+  scripts ran from `C:\Users\casaestb\AppData\Local\Temp\dqe_short` and
+  wrote/copied to the outputs folder via absolute paths.
+  - Bash heredocs failed on apostrophes; report.md was written to the short dir
+  under a neutral name and copied into place.
+  - Source CSV was not modified (git status confirms it is still only untracked,
+  unchanged).
+
+● The baseline run for the lab-results eval has finished. It caught the Site_C
+  unit problem, zeros, duplicates and Site_B lag, but not the Site_D analyser
+  shift. I'll restructure its folder for the aggregator and keep waiting for the
+  other five.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Agent "Eval 2 baseline no skill" finished · 6m 56s
+
+  Made 1 scratchpad edit +7 (ctrl+o to expand)
+
+● Timing captured for that run. Five runs still in progress; nothing else to do
+  until they report.
+
+› Message from general-purpose
+  ## Data quality evaluation complete: hba1c_lab_results.csv (skill:
+  data-quality-evaluation, followed all 7 steps)
+
+  **Verdict: Not fit for the dashboard as delivered; fit with caveats after four
+  corrections.**
+  Perfect-record score 63.9% (95% CI 61.9 to 65.7) over 7 CDEs and 2,460 records
+  vs a 97% bar. Per site: Site_A 97.0%, Site_D 95.4%, Site_B 65.2%, **Site_C
+  0.0%**.
+
+  ### What the user should worry about (in order)
+  1. **Site_C unit mix (Metric Mirage).** All 629 Site_C values lie between 3.5
+  and 11.4 while the `unit` column says mmol/mol for every row; the other sites
+  sit at 20 to 105. Site_C is almost certainly reporting DCCT %. IFCC conversion
+  (10.929 x (% - 2.15)) gives Site_C a median of 58.5 mmol/mol vs 58.0
+  elsewhere. Built on the raw file, **Site_C would show 100% of patients under
+  53 mmol/mol in every one of the 8 quarters**; after conversion it is 23 to
+  43%. One quarter of all dashboard cells would be wrong by 57 to 77 percentage
+  points, stably, so it would never look like an anomaly.
+  2. **Site_B timeliness.** Entry lag 30 to 119 days (median 77; 31% beyond 90
+  days) vs 0 to 39 days at the other sites. Only 52% of Site_B results exist 30
+  days after quarter end (98 to 99% elsewhere), so any normal refresh
+  under-counts Site_B's latest quarter by about half.
+  3. **Placeholder zeros, implausible values, duplicates.** 42 results of
+  exactly 0.0 (1.7%, all sites), 6 further values between 6 and 19 at A/B/D, 60
+  exact duplicate rows (2.4%, all sites). Together they move site-quarter cells
+  by up to 6 points.
+  4. **Pedigree unknown: patient_id scope.** 456 of 1,652 IDs (28%) appear at
+  more than one site and all four sites share the ID range 500000 to 502999.
+  Either shared patients or site-local IDs colliding; the "patients per site"
+  denominator depends on which.
+  5. **Right-data caveat.** No diagnosis field, so the metric is "% of *tested*
+  patients", not "% of patients with diabetes". Also, with 57 to 94 patients per
+  cell, 95% intervals are about +/- 10 to 12 points; show intervals on the
+  dashboard. Site_D's rise in mean HbA1c in 2024Q3 to Q4 (57 to 66) needs
+  explaining before launch.
+
+  Error Pareto: implausible value for declared unit 667 (72.7%), entry lag > 90
+  d 191 (20.8%), duplicate row 60 (6.5%). Accuracy against the LIS/analyser and
+  coverage are **unmeasured**. The Site_C unit hypothesis is inferred from the
+  data, not confirmed by the site.
+
+  ### Key recommendations
+  Fix the Site_C interface so the true unit travels with the result (owner: LIS
+  integration team); add an ingest checkpoint that blocks loads with mmol/mol
+  values < 20, zeros or duplicate rows; ask Site_B why results take 30 to 119
+  days and freeze Site_B quarters only ~120 days after quarter end; resolve
+  patient_id scope; compute at patient level with n and CI per cell; show
+  lag/implausibility/duplicate rates beside the metric; re-run the profiler with
+  the supplied rules.json on every load and p-chart the per-site perfect-record
+  rate; quarterly 20 to 30 record check against the LIS using the FAM
+  worksheet.
+
+  ### Outputs (all in `C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casa
+  estb-OneDrive---Bristol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Prese
+  ntation-RSS-DataQuality-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scrat
+  chpad\dqe-workspace\iteration-1\eval-2-lab-unit-mix\with_skill\outputs\`)
+  - `report.md` (full report in the skill's template), `user_notes.md`
+  (assumptions, uncertainties, workarounds)
+  - `rules.json`; `dq_output\` from the bundled profiler (dq_summary.md,
+  dq_profile.json, fam_worksheet.csv, pareto.png, pchart.png, funnel.png,
+  completeness.png)
+  - `ida_analysis.py` / `ida_output.txt`; `sensitivity.py` /
+  `sensitivity_output.txt`; `headline_metric_by_tier.csv` (the per-site-quarter
+  metric under 6 handling tiers); `perfect_record_by_site.txt`
+  - Charts: `value_hist_by_site.png`, `entry_lag_by_site.png`,
+  `headline_metric_sensitivity.png`
+  - Input CSV not modified.
+
+  ### Workarounds worth knowing
+  - The output path exceeds the Win32 cwd limit, so Python was run from
+  `C:\Users\casaestb\AppData\Local\Temp\dqe_tmp` with absolute paths and results
+  copied over.
+  - The Write tool's "no report files" guard blocked `report.md` by name; since
+  the caller required that exact deliverable, the content was written under a
+  neutral name and copied to `report.md`.
+  - The profiler cannot count composite-key duplicates, so the headline score
+  (63.9%) adds the 60 duplicates on top of the profiler's 65.4%.
+  - One block of `ida_output.txt` ("entry-quarter mismatch") is wrong due to a
+  `df.eq` method/column name clash in my first script; corrected figures (A 23%,
+  B 80%, C 23%, D 22%) are in `sensitivity_output.txt` and the report. Raw
+  output was kept for transparency.
+● The skill-assisted lab run also finished and found the Site_D shift the
+  baseline missed, plus a per-site perfect-record score. One improvement noted
+  for the profiler: duplicate checking on a composite key. Restructuring that
+  folder now.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Agent "Eval 2 with skill" finished · 10m 20s
+
+  Made 1 scratchpad edit +7 (ctrl+o to expand)
+
+● Both lab-results runs are complete with timing saved. Grading them doesn't
+  depend on the other four runs, so I'll start a grader for eval 2 now.
+
+● Agent(Grade eval 2 both runs)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+● While the remaining runs finish, I'll add composite-key duplicate support to
+  the profiler, which the lab run flagged as missing. The change is backward
+  compatible with a single key.
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 9 lines, removed 2 lines
+      565                                                                
+                  for p, v in row.items()} for g, row in tab.iterrows()}
+      566  
+      567      key_dups = None
+      568 -    if a.key and a.key in raw.columns:                        
+      569 -        key_dups = int(raw[a.key].duplicated(keep="first").sum
+          -())                                                           
+      568 +    key_cols = [k.strip() for k in (a.key or "").split(",") if
+          + k.strip() and k.strip() in raw.columns]                      
+      569 +    if key_cols:                                              
+      570 +        key_dup_mask = raw.duplicated(subset=key_cols, keep="f
+          +irst")                                                        
+      571 +        key_dups = int(key_dup_mask.sum())                    
+      572 +        # a duplicate key is a record-level defect: fold it in
+          +to the score and the Pareto                                   
+      573 +        err_df[f"key duplicate ({'+'.join(key_cols)})"] = key_
+          +dup_mask                                                      
+      574 +        score = perfect_record_score(err_df)                  
+      575 +        par = pareto(err_df)                                  
+      576 +        defective = err_df.any(axis=1)                        
+      577  
+      578      fam_path, fam_n = fam_worksheet(raw, parsed, err_df, criti
+           cal, a.date_col, a.fam_sample, a.out)
+      579  
+
+● Update(.claude\skills\data-quality-evaluation\scripts\dq_profile.py)
+  ⎿  Added 2 lines, removed 1 line
+      522      ap.add_argument("data")
+      523      ap.add_argument("--critical", required=True, help="comma-s
+           eparated critical data elements")
+      524      ap.add_argument("--rules", help="rules.json (see reference
+           s/rules-format.md)")
+      525 -    ap.add_argument("--key", help="record key column for dupli
+          -cate check")                                                  
+      525 +    ap.add_argument("--key", help="record key column(s) for du
+          +plicate check; comma-separate a composite key, "              
+      526 +                                  "e.g. patient_id,test_date,a
+          +nalyte")                                                      
+      527      ap.add_argument("--date-col", help="event/record date for 
+           time-ordered analysis")
+      528      ap.add_argument("--period", default="Q", help="M, Q or Y (
+           default Q)")
+      529      ap.add_argument("--group-col", help="site/source/practice 
+           column for variation across units")
+
+› Message from general-purpose
+  ## Data quality assessment complete - diabetes registry extract (baseline run,
+  no skills used)
+
+  **Verdict: not fit for purpose as supplied for a publishable 2005-2020
+  incidence trend.** Usable for a descriptive series of *newly recorded
+  diagnoses per year* after defined exclusions, but incidence *rates* cannot be
+  computed from this file (cases only; no list-size/person-time denominator; no
+  de-registration date).
+
+  ### Outputs saved to
+  `C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb-OneDrive---Bris
+  tol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentation-RSS-DataQual
+  ity-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-workspace\
+  iteration-1\eval-1-diabetes-incidence-extract\without_skill\outputs\`
+  - `report.md` (full shareable assessment, 7 sections + appendix)
+  - `user_notes.md` (10 uncertainties/workarounds)
+  - Scripts: `profile.py`, `checks.py`, `checks2.py`, `charts.py`
+  - Tables: `row_level_flags.csv` (20 boolean flags per input row),
+  `annual_counts_sensitivity.csv`, `annual_counts_by_practice_raw.csv`,
+  `annual_counts_by_practice_clean.csv`
+  - Charts: `fig1_monthly_diagnoses.png`, `fig2_annual_by_practice.png`,
+  `fig3_annual_sensitivity.png`, `fig4_p04_type_mix.png`,
+  `fig5_age_at_diagnosis.png`, `fig6_hba1c_bmi_distributions.png`
+
+  Source CSV not modified (md5 verified identical before/after).
+
+  ### Key findings (3,120 rows, 3,000 unique patients, 8 practices)
+  1. **2006-04-01 cluster: 185 diagnoses on one day**, all P02 (104) and P05
+  (81); 62 of them registered after that date. Raw 2006 count 353 vs ~160
+  adjacent years. Interpreted as register back-load/default date; exclude.
+  2. **P04 switched to "Proxy" coding in 2017**: T2 counts 2017-2020 = 2/6/3/2,
+  Proxy = 12/7/20/22, total flat. Proxy used by no other practice. Excluding
+  Proxy manufactures a decline from 2017; type-specific trends for P04 post-2016
+  are impossible.
+  3. **195 (6.4%) diagnosed before registration** (prevalent at entry; 62
+  overlap with the cluster) - exclude from incident numerator.
+  4. **120 duplicate patient_id rows** (7 exact; 112 differ only by HbA1c
+  +/-1.0; 13 differ on registration date; 7 have dx date blank in one copy).
+  5. **Impossible dates**: 13 births = 2031-05-01 (placeholder); 110 registered
+  before birth; 23 deaths before diagnosis; 23 deaths after today (to 2029); 88
+  deaths after the latest registration (2021-04-20) - extract date needs
+  confirming.
+  6. **Birth dates/age not trustworthy**: age at dx near-uniform 18-80, 270
+  under 18 (209 labelled T2), 13 negative; birth years uniform 1930-1999.
+  Age-standardisation should not be attempted until verified.
+  7. **Sentinels**: HbA1c 999 (x60), 1000 (x4), <20 (x12); BMI -1 (x26), 5.2
+  (x12), 7.9 (x5), 95.3 (x6), 120 (x8).
+  8. **P07 missing HbA1c in 42% of rows** (0% elsewhere) - different data feed.
+  9. Sex coded six ways (M/F/Male/Female/f/U); 62 missing diagnosis dates (2%);
+  70/255 T1 without insulin.
+  10. Temporal: no diagnoses before 2004 (registry start - 2004/05 may include
+  first-coded prevalent cases); March 2020 dip (COVID); registrations decline
+  after 2010 suggesting patients who left are absent.
+
+  ### Annual series impact
+  Raw 2006 = 353; after de-dup + cluster removal = 159; after full "core clean"
+  (484 of 3,000 patients excluded) the series is broadly flat 2005-2020
+  (129-176/yr) with a mild 2012-2016 rise. Dropping Proxy would falsely cut
+  2017-2020 by 5-22/yr.
+
+  ### Workarounds/notes
+  - Windows could not launch Python from the long output path; scripts were run
+  from `C:\Users\casaestb\AppData\Local\Temp\dqe1` (CSV copied as `data.csv`)
+  and outputs copied across. Re-running requires a short path.
+  - Bash heredoc rejected prose containing apostrophes, so `report.md` was
+  written via the Write tool under a temporary name and renamed.
+  - Extract date assumed 2026-10-08; `hba1c_lab_results.csv` in the same folder
+  was out of scope and not opened.
+  - MCP servers `real-world-data` (needs auth) and `databricks` (connection
+  closed) were unavailable; not needed for this task.
+
+● Agent "Eval 1 baseline no skill" finished · 11m 2s
+
+● The diabetes baseline run is done and was thorough on detection. Restructuring
+  its folder, saving timing, and verifying the composite-key edit didn't break
+  the profiler.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The composite-key check works and folds the 60 duplicate lab rows into the
+  score. Three eval runs (diabetes with skill, and both pharmacovigilance plan
+  runs) and the eval 2 grader are still in flight.
+
+› Message from general-purpose
+  Graded eval-2-lab-unit-mix, both runs, same standard. Grading files written:
+  - ...\eval-2-lab-unit-mix\with_skill\run-1\grading.json  (Run A)
+  - ...\eval-2-lab-unit-mix\without_skill\run-1\grading.json  (Run B)
+  (workspace root: C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb
+  -OneDrive---Bristol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentat
+  ion-RSS-DataQuality-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpa
+  d\dqe-workspace\iteration-1\)
+
+  **Pass counts**
+  - Run A (with_skill): 8/9 (0.89). Failed: Site_D shift + measurement-system
+  cause.
+  - Run B (without_skill): 7/9 (0.78). Failed: Site_D shift; explicit verdict
+  naming Site_D investigation.
+
+  Both runs correctly found the Site_C percent-vs-mmol/mol mix (with IFCC
+  conversion check, median 58.5 vs 58.0), the 42 zeros, the 60 exact duplicates,
+  Site_B's 30-119 day entry lag, and quantified Site_C as 100% "controlled" raw
+  vs 23-43% after conversion. All headline numbers in both reports spot-check
+  against their script outputs.
+
+  **Most important differences**
+  1. Site_D step change (the planted analyser shift from 2024-07): Run A
+  detected it ("mean rises from about 57 to 66 across 2024Q3-Q4, under-53 falls
+  43% to 21%, should be explained before launch") but attributed it to noise /
+  case mix / drift, never to an analyser or method change, so it fails the
+  assertion strictly. Run B never ran a per-site-per-quarter distribution check
+  and missed the shift entirely, which also cost it the verdict assertion (no
+  Site_D named as a precondition).
+  2. Fit-for-use framing: Run A gives an explicit verdict ("Not fit for this use
+  as delivered. Fit with caveats after four corrections"), a pedigree table
+  with explicit unknowns (analyser, calibration, extract logic, ID scope), a
+  perfect-record score by site (A 97.0 / B 65.2 / C 0.0 / D 95.4),
+  funnel/p-chart, and a six-tier sensitivity table. Run B is a strong generalist
+  sanity check organised as a ranked issue list with pipeline guard rules; its
+  verdict is "flatly wrong / BLOCKER" rather than a fitness statement, and its
+  pedigree questions are lighter (no analyser question).
+  3. Report/code consistency: Run B's report says all six sub-20 values at A/B/D
+  were converted as percent, but deep.py converts only value < 15 (4 rows);
+  18.0 and 18.6 remain counted as controlled. Run A has two minor overclaims
+  against its own evidence ("all 629 Site_C values lie between 3.5 and 11.4"
+  ignores its 10 zeros; "all four sites are special causes" while the profiler
+  shows Site_B inside limits). Run B did stronger work on the patient_id
+  site-local question (independent-sampling and concordance arguments).
+
+  Timing: A 620 s / 98k tokens / 18 tool uses; B 416 s / 64k tokens / 15 tool
+  uses.
+
+  Eval feedback (in both files): the Site_D assertion is compound (detect +
+  attribute) and currently hides A's partial detection; the verdict assertion's
+  parenthetical overlaps it so one miss can fail two assertions. No assertion
+  checks report-vs-code consistency or handling of the sub-20 non-Site_C values,
+  both of which differentiated the runs.
+
+● Eval 2 graded: 8 of 9 assertions with the skill, 7 of 9 without. The one both
+  missed was attributing the Site_D step change to an analyser or method change.
+  That's a clear improvement for the skill: a step change at one unit on one
+  date should be read as a measurement-system change first. I'll fold that in
+  after the remaining three runs finish.
+
+● Agent "Grade eval 2 both runs" finished · 5m 11s
+
+› Message from general-purpose
+  Task complete. All deliverables saved under:
+  C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb-OneDrive---Brist
+  ol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentation-RSS-DataQuali
+  ty-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-workspace\i
+  teration-1\eval-3-pv-feed-monitoring-plan\without_skill\outputs\
+
+  ## What was produced
+
+  **report.md** (main plan, ~26 KB, 12 sections): summary; scope and 7 stated
+  assumptions; design principles (check what signal detection depends on, gate
+  not report, trend not just test, thresholds that behave at n=5,000, fix at
+  source); failure-mode table mapping each defect to its effect on
+  disproportionality analysis and to the rule that catches it; a four-tier check
+  catalogue (Tier 0 structural, Tier 1 row-level validity, Tier 2 cross-field,
+  Tier 3 longitudinal vs a rolling 12-month baseline); a statistician-facing
+  section on the statistical basis (log-count control limits for volume,
+  pooled-baseline p-charts with a 2 pp practical minimum for proportions, total
+  variation distance instead of chi-square for category mix, unseen-PT share as
+  the MedDRA-upgrade detector); a Blocker/Major/Minor severity model tied to
+  HOLD / RELEASE WITH CAVEATS / RELEASE decisions with two guard-rails (no hand
+  edits; recurring Minor escalates to Major after 3 months); a 10-step monthly
+  procedure with roles (Runner, Reviewer, Feed Owner, SD lead) and time
+  estimates (45-90 min runner, 15-30 min reviewer); tooling and folder layout;
+  issue management and vendor feedback loop with suggested response SLAs;
+  governance (config control, audit trail, 6-monthly threshold review, quarterly
+  KPIs); and a 4-phase rollout (set-up, baseline, 3-month shadow, live,
+  enhancements).
+
+  **templates/**
+  - `dq_checks.R` - runnable monthly check script, base R only (no packages),
+  ~60 checks, all thresholds in one `cfg` block. Outputs scorecard.md (with
+  verdict and sign-off block), findings.csv, row_flags.csv per month; `--commit`
+  appends the month to compact history files that feed the longitudinal checks.
+
+  - `make_synthetic_feed.R` - generates practice files, optionally with injected
+  defects, for training and threshold calibration.
+  - `config/reference_values.csv` - starting allowed-value lists (placeholders,
+  clearly marked to replace with vendor code lists).
+  - `dq_rules_catalogue.csv` - 50 rules with logic, threshold, severity, typical
+  cause, action, and whether implemented in the script.
+  - `monthly_run_checklist.md` - one-page tick-box SOP with sign-off.
+  - `dq_issue_log.csv` - log layout with two worked example rows.
+  - `vendor_query_template.md` - structured query email.
+  - `README.md` - quick start (set-up, monthly command, practice mode).
+  - `example_scorecard_defective_month.md` and
+  `example_findings_defective_month.csv` - real output from the test run.
+
+  **user_notes.md** - assumptions that change the rules if wrong (feed grain
+  one-row-per-case, incremental not cumulative, ISO dates, value codings,
+  reporting month = receipt month), environment uncertainties (MedDRA PT export,
+  vendor manifest, retained history), the threshold starting values, known
+  script limitations, and what was and was not tested.
+
+  ## Key findings / verification
+  - The script was tested end to end with R 4.5 on this machine: 12 synthetic
+  clean months committed as baseline each gave RELEASE with only the expected 3
+  Minor background findings (no false alarms); a 13th month with 8 injected
+  defect types was correctly placed on HOLD with 3 Blockers (missing PTs 1.6%,
+  duplicate case_ids 0.8%, dd/mm/yyyy dates), 4 Majors (exact duplicate rows,
+  product spelling variant, fatal-but-non-serious, serious % +8.6 pp vs
+  baseline) and the rest as Minors (non-ISO 'UK', trailing-space PTs, new
+  categories).
+  - Most consequential assumption to confirm first: whether the feed is one row
+  per case. If it is one row per case-event, rule D01 (case_id unique) must be
+  re-keyed or it will fire every month; the fix location is noted in
+  user_notes.md.
+  - The single most valuable ask of the vendor is a per-delivery manifest (row
+  count, count by seriousness, extraction date, MedDRA version) to enable
+  reconciliation; the process works without it.
+
+  ## Notes on process
+  - The harness blocked the Write tool for report-style .md files, so report.md,
+  user_notes.md and the .md templates were written via PowerShell (UTF-8, no
+  BOM) because the task explicitly required them as saved files. Content is
+  identical to what was drafted.
+  - A temporary test workspace was used at
+  C:\Users\casaestb\AppData\Local\Temp\dqtest (synthetic data only; safe to
+  delete).
+  - No skills were invoked, per instruction.
+
+● The pharmacovigilance baseline run is done, and it went far: a four-tier check
+  catalogue, an R script, templates and a rollout plan. Restructuring its
+  folder while I wait for its timing notification and the last two
+  skill-assisted runs.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Agent "Eval 3 baseline no skill" finished · 16m 30s
+
+  Made 1 scratchpad edit +7 (ctrl+o to expand)
+
+● I'll update the skill based on eval 2's grading feedback now, since it's
+  independent of the remaining runs, while the two skill-assisted runs and
+  grading for evals 1 and 3 still need to happen before aggregation and the
+  viewer. · summary
+
+● Update(.claude\skills\data-quality-evaluation\SKILL.md)
+  ⎿  Added 6 lines, removed 1 line
+      130    period. Redman and Hoerl's census lesson: the average miscou
+           nt was small, the state-to-state variation changed
+      131    the outcome. Use a p-chart or funnel plot; flag units outsid
+           e control limits.
+      132  - **Stability over time.** Shifts in volume, missingness, code
+            mix or distributions over time are "Silent Drift"
+      133 -  until proven otherwise. Trend by category to expose incentiv
+          -e or policy artefacts.                                        
+      133 +  until proven otherwise. Trend by category to expose incentiv
+          +e or policy artefacts. Compute the per-unit,                  
+      134 +  per-period mean and spread of every measured CDE, not only d
+          +efect rates: a **step change confined to one unit             
+      135 +  from one date** is a measurement-system or process change (n
+          +ew analyser, method, protocol, software, coding               
+      136 +  rule, vendor) until the unit says otherwise. Name that hypot
+          +hesis, say what to ask the unit, and do not                   
+      137 +  attribute the step to case mix or noise without evidence. Ho
+          +erl's hypertension column and the census                      
+      138 +  Post-Enumeration Survey are both cases where the measurement
+          +, not the population, moved.                                  
+      139  - **Population match.** Compare the dataset's demographics, ge
+           ography and time coverage against the target
+      140    population of the decision. Flag coverage gaps as "right dat
+           a" failures even when every value is accurate.
+      141  - **Self-referencing benchmarks.** If the only external benchm
+           ark is derived from the same recording system,
+
+● Edit applied. Everything else now depends on the two remaining skill-assisted
+  runs (diabetes extract and the pharmacovigilance plan), which are still
+  working. I'll grade, aggregate and build the viewer as soon as they report.
+
+› Message from general-purpose
+  ## Data quality evaluation complete: GP diabetes registry extract for
+  incidence trends 2005-2020
+
+  Followed `data-quality-evaluation/SKILL.md` end to end (frame use and CDEs,
+  pedigree, initial data analysis, bundled profiler with a rules file, dimension
+  and perfect-record scoring, right-data/sensitivity analysis, verdict). Source
+  CSV was read only and not modified.
+
+  ### Verdict (as written in report.md)
+  **Not fit as supplied** for estimating diabetes incidence trends; **fit with
+  caveats** for a trend in *recorded* new diagnoses after documented
+  corrections, and only if the team obtains practice list sizes (denominators)
+  and answers the pedigree questions. Perfect-record score 79.6% (95% CI
+  78.1-80.9) over 11 CDEs vs Redman's 97% bar; 85.5% (84.2-86.6) on the 7 core
+  CDEs.
+
+  ### The three findings that drive the verdict
+  1. **185 diagnoses all dated 2006-04-01, only in P02 (104) and P05 (81)**,
+  185x the daily median, 62 dated before the patient registered. Start of the
+  QOF payment year: retrospective coding of prevalent patients. It flips the
+  headline: as supplied, recorded cases fall 17% from 2005-09 to 2016-20; after
+  de-duplication + incident-only rule + removing the batch they are flat (+2%).
+  2. **P04 switches to Proxy codes from 2017** (Proxy appears nowhere else, no
+  other year); 61 of 77 P04 cases in 2017-20 are Proxy and T2 codes drop to
+  2-6/yr. "All codes" vs "definite codes" definitions diverge from 2017 (+10% vs
+  +2% late-period change) purely because of coding practice (Silent Drift /
+  Proxy Trap).
+  3. **No denominator**: the extract is a case list; incidence rates cannot be
+  computed at all. The birth cohort is closed (no births after 1999), so mean
+  age at diagnosis rises mechanically from 38 (2005) to 54 (2020).
+
+  ### Other material defects (all quantified in the report)
+  120 duplicate patient_ids (3.8% of rows; 112 pairs differ by exactly 1.0
+  HbA1c, i.e. a merge/extraction artefact); HbA1c missing for 42% of P07 and 0%
+  elsewhere (P07 at 53% defective, far outside funnel limits); sentinels HbA1c
+  999/1000 (64), BMI -1/5.2/7.9/95.3/120 (57), birth_date 2031-05-01 (13), sex U
+  (23) plus Female/Male/f spellings (70); 110 registrations before birth; 195
+  diagnoses before registration and 148 within 365 days of it (prevalent
+  transfers-in); 70/255 T1 never on insulin; 219 T2 diagnoses under age 18; age
+  at diagnosis near-uniform 10-85 and identical across types; zero
+  HbA1c-treatment correlation; 23 deaths before diagnosis; 23 deaths in the
+  future (to 2029) while registrations stop April 2021 (extract date
+  contradictory). Accuracy vs reality is unmeasured (no reference source).
+  Tate's >=10% misclassification rule flags P01, P02, P07 as "poor"; excluding
+  them does not change the cleaned trend.
+
+  ### Outputs (all in `...\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-w
+  orkspace\iteration-1\eval-1-diabetes-incidence-extract\with_skill\outputs\`)
+  - `report.md` (164 lines, full template: verdict, use/CDEs, pedigree with
+  unknowns, IDA, dimension table, perfect-record scores, Pareto with origins,
+  variation/stability, right-data sensitivity table, rule-of-ten cost, root
+  causes with Tate patterns and owners, 13 recommendations, limitations,
+  appendix)
+  - `user_notes.md` (assumptions, score caveats e.g. 999 double-counted in
+  Pareto, workarounds, out-of-scope items)
+  - `rules.json` (CDE error definitions, 4 cross-field rules)
+  - `dq_output_full\` (dq_summary.md, dq_profile.json, fam_worksheet.csv with
+  16/100 auto-flagged, pareto.png, pchart.png, funnel.png, completeness.png) and
+  `dq_output_core\` (7-CDE run)
+  - `fig1_counts_by_year_tiers.png`, `fig2_practice_small_multiples.png`,
+  `fig3_flag_rate_heatmap_practice_year.png`,
+  `fig4_age_at_diagnosis_by_type.png` (dataviz skill followed; palette
+  validated)
+  - CSV tables: `incidence_counts_by_year_tiers_scenarios.csv` (3 tiers x 4
+  scenarios), `exclusion_accounting.csv`, `practice_flag_rates_pct.csv`,
+  `practice_by_year_counts_*_dedup.csv`
+  - Scripts: `ida_explore.py`, `ida_followup.py`, `right_data_analysis.py` (+
+  `parsed_copy.pkl` working copy)
+
+  ### Notes for the caller
+  - The Write tool refused `report.md` as a "report file"; it was written via
+  PowerShell instead because the task explicitly required it as a deliverable.
+  Content is identical to what was intended.
+  - Python could not be launched with the long output path as cwd (Win32 limit);
+  scripts were run from a short cwd with absolute paths.
+  - A companion `hba1c_lab_results.csv` sits beside the extract; it was not
+  assessed (task named only the registry extract) but is flagged in the report
+  as a likely independent triangulation source.
+  - The age/type/correlation anomalies are consistent with a synthetic or test
+  file; the report treats the file as genuine and tells the team to confirm
+  provenance.
+
+● The skill-assisted diabetes run is complete and followed the full template.
+  Restructuring its folder and launching the eval 1 grader; timing will be added
+  when the notification arrives.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Agent "Eval 1 with skill" finished · 17m 20s
+
+  Made 1 scratchpad edit +7 (ctrl+o to expand)
+
+● Agent(Grade eval 1 both runs)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+● Status: the eval 1 grader is running, the eval 3 skill-assisted run is still
+  working, and everything downstream (eval 3 grading, aggregation, the viewer)
+  depends on those two. One cost signal already visible: the skill-assisted
+  diabetes run used roughly twice the tokens and time of the baseline, partly
+  because it ran the profiler twice over different field sets. I'll address that
+  in the revision after the viewer is built.
+
+› Message from general-purpose
+  ## Task complete: monthly DQ check and monitoring process for the vendor PV
+  case-listing feed
+
+  Followed `data-quality-evaluation/SKILL.md` (its "plan, not an evaluation"
+  branch) plus `references/redman.md`, `hoerl.md`, `tate.md`,
+  `pedigree-questions.md`, `rules-format.md`, `report-template.md`, and read
+  `scripts/dq_profile.py` to make the templates fit its real behaviour. The
+  dataviz skill was loaded before writing the control-chart code.
+
+  ### Deliverables (all in `...\with_skill\outputs\`)
+
+  | File | What it is |
+  |---|---|
+  | `report.md` | The plan (33 KB). One-page summary of the monthly loop (about
+  2 h, two people), intended use and data customer, 8 CDEs with operational
+  error definitions and owners, 97% bar + hold floor + GREEN/AMBER/RED gate
+  table, one-off setup (pedigree, Friday Afternoon Measurement, rules freeze,
+  6-month baseline, right-data check), 10-step monthly runbook, dimension table,
+  statistics notes (why XmR not binomial p-chart; binomial floor; frozen
+  baseline), rule-of-ten cost illustration, Tate failure patterns mapped to
+  checks, ownership/feedback loops, re-evaluation triggers, limitations,
+  appendices |
+  | `pv_feed_rules.json` | Profiler rules (placeholders, column rules, two
+  cross-field consistency rules) plus a `monitoring` block (expected columns,
+  composite grain, watched shares, all gate thresholds). Code lists are
+  explicitly marked as placeholders to replace from the first real profile |
+  | `pv_monthly_dq.py` | One-command monthly wrapper: runs the skill's
+  `dq_profile.py`, adds PV/cross-month checks (schema, composite-key duplicates,
+  receipt-date timing vs reporting month, new category values, category-share
+  shifts, case_id overlap with prior deliveries, optional MedDRA PT check,
+  funnel by country/product), appends a running log, draws XmR control charts
+  across deliveries, applies the gate, writes `scorecard.md`. Exit code 2 on RED
+  |
+  | `monthly_checklist.md` | One-page fill-in runbook with sign-off |
+  | `pedigree_form.md` | Who/what/when/where/why/how questions tailored to this
+  feed (grain, versioning, incremental vs cumulative, MedDRA version, what
+  product/seriousness/outcome mean, exclusions, format) |
+  | `qa_traceback_template.csv` | Columns for the 20-record trace-back to the
+  safety database (the only accuracy measurement) |
+  | `example_output_synthetic/` | Scorecards for two months, control chart,
+  Pareto, running log from an 8-month synthetic run (clearly labelled not real
+  data) |
+  | `user_notes.md` | Assumptions and uncertainties (10 assumptions, vendor
+  questions, script caveats) |
+
+  ### Verification
+  - Rules JSON parses; script compiles; ran end to end on a synthetic 8-month
+  feed (~5,500 rows/month) with planted defects. Every planted defect was caught
+  in the month planted: product spelling variant (new-value list + allowed-list
+  errors), missing-outcome spike (missingness above limit), LLT-like terms (PT
+  check), duplicated rows and re-sent cases (composite duplicates + overlap),
+  future/sentinel dates, Fatal + Non-serious inconsistencies. Gate: AMBER months
+  1-7 (about 96%, below the 97% bar), RED month 8 (duplicates 1.04%, rate 87.7%
+  below the 90% floor).
+  - Fixed during testing: XmR limits degenerated when baseline variation was
+  near zero (flagged sampling noise); added a binomial 3-sigma floor for
+  percentage metrics. Chart axes adjusted so percentage panels never go negative
+  but keep resolution.
+
+  ### Key design decisions worth relaying
+  1. `Unknown` outcome is treated as a legitimate E2B value (weak, watched
+  share), not a placeholder; `UNKNOWN` country is still an error via the ISO
+  regex.
+  2. Uniqueness is on the composite grain (case_id, product, event_term);
+  `case_id` alone is not unique in a case-event listing. The rules file says how
+  to switch if the vendor confirms one row per case.
+  3. Across-month monitoring uses XmR (individuals) charts with limits frozen on
+  the first 6 months, because binomial limits at n=5,000 are far too tight for
+  a vendor process; the generic profiler's within-file p-chart and date-spike
+  heuristic are not informative for a single-month file.
+  4. Accuracy is only measurable via the human FAM pass and a 20-record/month
+  trace-back to the safety database; the plan says so plainly and schedules
+  both.
+  5. Right-data concerns flagged for the signal-detection lead: whether the
+  disproportionality background is the company portfolio only, and that eight
+  fields lack case version, suspect/concomitant role, onset date, age and sex.
+
+  ### Note on process
+  The Write tool refused the filename `report.md` (treats it as a subagent
+  report file). Since `report.md` is the deliverable the task explicitly
+  requested, the plan was written under a neutral name and renamed to
+  `report.md` via the shell. Content is identical to what is summarised above.
+
+  Assumptions (because the user could not be asked) are stated in
+  `user_notes.md` and inline in `report.md` section 1: use = disproportionality
+  signal detection; incremental monthly deliveries; case x product x event
+  grain; E2B(R3)-style code lists as placeholders; thresholds are judgement
+  starting values to be corrected by the baseline.
+
+● All six runs are complete. Restructuring the last folder and launching the
+  eval 3 grader; timing will follow from the notification.
+
+  Ran 1 shell command (ctrl+o to expand)
+● Agent(Grade eval 3 both runs)
+  ⎿  Backgrounded agent (↓ to manage · ctrl+o to expand)
+
+● Agent "Eval 3 with skill" finished · 24m 13s
+
+  Made 1 scratchpad edit +7 (ctrl+o to expand)
+
+● I've timed all six runs. While the two graders finish, I'll add a
+  proportionality rule to the skill, since the skill-assisted runs show roughly
+  double the tokens and time compared to baselines. · summary
+
+● Update(.claude\skills\data-quality-evaluation\SKILL.md)
+  ⎿  Added 10 lines
+      203  6. **Re-evaluation on reuse**: checks tuned for one purpose do
+            not transfer; schedule a fresh Step 1 whenever the
+      204     data gets a new customer.
+      205  
+      206 +## Keep the effort proportionate                              
+      207 +                                                              
+      208 +The workflow is a checklist of questions, not a mandate to bui
+          +ld tooling. One profiler run over the agreed CDEs             
+      209 +plus a few targeted pandas checks answers most evaluations; a 
+          +second run is justified only when the verdict                 
+      210 +depends on it (for instance, core versus extended CDE sets giv
+          +ing different answers). Do not write a bespoke                
+      211 +monitoring framework, wrapper scripts, or multi-file template 
+          +packs unless the user asked for a system to run               
+      212 +repeatedly. When they did ask for a plan, a two-page runbook, 
+          +a rules file and the bundled profiler are usually             
+      213 +the right size; a statistician should be able to run the whole
+          + thing in an afternoon. Spend the saved effort on             
+      214 +the parts the script cannot do: pedigree, right-data reasoning
+          +, root causes and a verdict the customer can act on.          
+      215 +                                                              
+      216  ## Judgement rules that distinguish good DQ work
+      217  
+      218  - Lead with fitness for the stated use. A long list of finding
+           s with no verdict is not an evaluation.
+
+● Proportionality rule added. Needed next: eval 1 grading, eval 3 grading, then
+  aggregation, viewer and the analyst pass. Both graders are already running and
+  nothing else is independent of them, so I'll continue when they report.
+
+› Message from general-purpose
+  Grading complete for eval-1-diabetes-incidence-extract. Both grading.json
+  files written:
+  - with_skill/run-1/grading.json: 13/13 passed (pass_rate 1.0)
+  - without_skill/run-1/grading.json: 8/13 passed (pass_rate 0.62)
+
+  Verification basis: no transcript, so graded from report.md + user_notes.md +
+  CSV/JSON artefacts. I independently recomputed every headline number from
+  evals/files/diabetes_registry_extract.csv. Both runs are factually accurate:
+  185 spike (P02 104 / P05 81, 62 registered after the date), 120 duplicate IDs
+  + 7 exact dup rows, sex M 1545/F 1482/Female 31/U 23/f 20/Male 19, 60 x 999
+  and 4 x 1000 HbA1c, 26 x BMI -1 (the file actually has 26, not the planted
+  25), 70/255 T1 without insulin, 23 deaths before diagnosis, 13 births
+  2031-05-01, 62 missing dx dates, 195 dx-before-registration, P04 Proxy 61/77
+  in 2017-20, P07 HbA1c 129/305 missing. Run A's Wilson CI (78.1-80.9 for
+  2482/3120) and scenario table (-17% -> +2%) match the CSV outputs; Run B's
+  1,171 any-flag rows and 2,516 core-clean patients match its CSVs; Run B's
+  March-2020 = 7 and registration-decline claims also verified.
+
+  Run B failed on: (2) no perfect-record % / CI / acceptance bar (only "38%
+  carry at least one flag"); (3) no explicit CDE list for scoring; (10) ran a
+  Proxy-excluded sensitivity but explicitly recommended a single all-type
+  definition rather than tiers with reported spread; (11) no Pareto ranking of
+  error types; (12) recommendations are cleaning-only, no prevent-at-source or
+  ongoing monitoring. Run B passed the practice-variation and limitations
+  assertions on narrower evidence (P07 HbA1c 42% vs 0%; an "Assumptions" section
+  covering pedigree unknowns) — both noted as borderline in evidence.
+
+  Most important differences between the runs:
+  1. Scoring framework: Run A gives a record-level perfect-record score (79.6%,
+  CI 78.1-80.9, 11 named CDEs, vs 97% bar, with a 7-CDE sensitivity run); Run B
+  has no score, no CI, no bar, no CDE list.
+  2. Decision framing: Run A quantifies how defects change the answer (2006
+  batch flips the 2005-09 vs 2016-20 change from -17% to +2%; tiers A/B/C x
+  scenarios S0-S3) and recommends publishing all tiers; Run B shows a cleaning
+  sensitivity table but recommends one definition and never ranks error types or
+  traces a Pareto.
+  3. Recommendation structure: Run A separates prevent-at-source / clean /
+  controls-and-monitoring with owners and a root-cause table; Run B lists only
+  one-off cleaning steps. Run A cost ~1.6x the time (1040 s vs 662 s) and ~1.9x
+  tokens (181k vs 95k).
+
+  Both runs independently flagged items the assertions do not test: the missing
+  denominator/person-time (decisive for incidence), the implausible
+  age-at-diagnosis distribution (file may be synthetic), the unopened
+  hba1c_lab_results.csv, and (Run B only) 2020 pandemic and 2004-05
+  registry-start comparability caveats.
+
+  Eval feedback recorded in both files: the practice-variation assertion is too
+  easy (a single-column observation passes); assertion 10 wording is ambiguous
+  between "performed a sensitivity" and "recommends reporting a spread"; no
+  assertion credits the denominator gap or a quantified trend-impact statement.
+
+  Files:
+  - C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb-OneDrive---Bri
+  stol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentation-RSS-DataQua
+  lity-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-workspace
+  \iteration-1\eval-1-diabetes-incidence-extract\with_skill\run-1\grading.json
+  -
+  C:\Users\casaestb\AppData\Local\Temp\claude\c--Users-casaestb-OneDrive---Brist
+  ol-Myers-Squibb-Documents-Projects-RSS-Data-Quality-Presentation-RSS-DataQuali
+  ty-2026-Agents\7b143ced-801c-4d75-9f15-530ba2d1668c\scratchpad\dqe-workspace\i
+  teration-1\eval-1-diabetes-incidence-extract\without_skill\run-1\grading.json
+
+● Eval 1 graded: 13 of 13 with the skill, 8 of 13 without. The skill's value
+  there is the scoring framework, the Pareto and the prevent-versus-clean
+  structure, not raw detection. Waiting only on the eval 3 grader now, then I'll
+  aggregate and build the viewer.
+
+● Agent "Grade eval 1 both runs" finished · 9m 5s
+
+› Message from general-purpose
+  Grading complete for eval-3-pv-feed-monitoring-plan. Both grading.json files
+  written and JSON-validated:
+  - with_skill:
+  ...\eval-3-pv-feed-monitoring-plan\with_skill\run-1\grading.json
+  - without_skill:
+  ...\eval-3-pv-feed-monitoring-plan\without_skill\run-1\grading.json
+  (Both timing.json files were present and included: A = 1452.7 s / 44 tool uses
+  / 189k tokens; B = 989.6 s / 20 tool uses / 109k tokens. No metrics.json or
+  transcript.md in either run.)
+
+  **Pass counts**
+  - Run A (with_skill): 9/9 (pass_rate 1.0)
+  - Run B (without_skill): 5/9 (pass_rate 0.56). Failed: #2 manual sample review
+  / perfect-record baseline, #3 pedigree question list, #5 perfect-record rate
+  on a control chart, #8 explicit + justified acceptance standard.
+
+  **Most important differences**
+  1. Measurement philosophy. Run A is built around a record-level perfect-record
+  rate: a 100-record Friday Afternoon Measurement before month 1, a repeated
+  30-min human pass, a 20-record trace-back to the safety database (the only
+  accuracy measurement in either plan), XmR control charts of the rate with a
+  frozen 6-month baseline (verified in control_charts.png), a 97% bar with a
+  stated rationale, and a GREEN/AMBER/RED gate. Run B has none of this: "perfect
+  record" never appears; it is a 60+ rule catalogue with per-rule thresholds,
+  per-metric p-charts/TVD, and a Blocker/Major/Minor -> HOLD/RELEASE verdict.
+  Run B's thresholds are explicit but admitted to be "set by judgement", which
+  is why #8 failed.
+  2. Pedigree/provenance. Run A ships a full pedigree_form.md (source of cases,
+  who codes, dedup, exclusions, MedDRA version, cut-off/timeliness). Run B only
+  lists format/grain assumptions A1-A7 and asks the vendor for a manifest with
+  MedDRA version; no provenance questions.
+  3. Runnability (the point you asked me to weigh). Run B is lighter and easier
+  to adopt: base R with no packages, one Rscript command, fully self-contained
+  folder, Runner 45-90 min + Reviewer 15-30 min, two people, clear 10-step
+  procedure and shadow rollout. Run A is a clear 6-step routine (~2 h elapsed)
+  but closer to ~3 person-hours across 3-4 people, needs safety-DB read access,
+  a one-day setup, and, critically, its script imports the skill's
+  scripts/dq_profile.py which is NOT in the deliverable (referenced only as
+  "<skill>/scripts/dq_profile.py"); the shipped scorecard also prints
+  "np.float64(...)" artefacts. Run B's risk is the opposite: a long FAIL list
+  each month on real data (any missing non-key value = Minor FAIL) until
+  calibrated, and no accuracy measurement at all.
+
+  **Eval feedback recorded in both files**: assertion #9 is non-discriminating
+  (both pass; it misses self-containment and person-hours); assertion #8 is
+  ambiguous for severity-model plans; no assertion covers accuracy against an
+  independent reference (trace-back) or the monthly triage burden; process
+  claims ("tested end to end") are unverifiable without a transcript, though
+  both runs' synthetic example outputs are consistent with their claimed planted
+  defects (Run B has small count discrepancies: 79 vs 80 missing PTs, 4 vs 5
+  fatal/non-serious).
+
+● All grading is in: 30 of 31 assertions pass with the skill, 20 of 31 without.
+  Now aggregating the benchmark and building the static review page.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Agent "Grade eval 3 both runs" finished · 8m 3s
+
+● Found that the benchmark's token column pulled character counts from grading
+  files instead of real token totals. I'll fix it using the saved timing files,
+  add analyst notes, then build the static viewer. · summary
+
+  Made 3 scratchpad edits +51 -1, ran 2 shell commands (ctrl+o to expand)
+
+● I'll now fix the remaining skill issue from eval 3 (including the profiler in
+  deliverables), tighten the two weak assertions, validate the skill package,
+  and place the review page at a short path—all together since they're
+  independent tasks. · summary
+
+● Update(.claude\skills\data-quality-evaluation\SKILL.md)
+  ⎿  Added 3 lines, removed 1 line
+      195     against reality. Full procedure in `references/redman.md`.
+      196  2. **Pedigree capture** for every new source (Step 2 questions
+            as a form).
+      197  3. **Automated rules** derived from the customer's error defin
+           itions, run on every load, with the perfect-record
+      198 -   rate charted over time and control limits.                 
+      198 +   rate charted over time and control limits. If the team will
+          + run the bundled profiler, copy                               
+      199 +   `scripts/dq_profile.py` into their deliverable folder next 
+          +to the rules file and runbook; a plan that                    
+      200 +   imports it from the skill path will not run on their machin
+          +es.                                                           
+      201  4. **Checkpoints** that block downstream flow when the rate br
+           eaches the limit, plus an independent QA sample
+      202     (the census Post-Enumeration Survey idea: a second, indepen
+           dent measurement of the same thing).
+      203  5. **Ownership and feedback loops**: a named owner per CDE, er
+           rors fed back to creators, a no-blame "data
+
+● Update(.claude\skills\data-quality-evaluation\evals\evals.json)
+  ⎿  Added 1 line, removed 1 line
+      11          "A record-level perfect-record (or equivalent all-criti
+          cal-fields-correct) percentage is reported with a confidence in
+          terval and compared against an explicit acceptance bar",
+      12          "The critical data elements used for scoring are listed
+           explicitly",
+      13          "The 2006-04-01 diagnosis-date spike is detected and in
+          terpreted as probable retrospective or batch entry",
+      14 -        "Variation across practices is quantified (defect or mi
+         -ssingness rate by practice) and P04 and/or P07 are singled out 
+         -as outliers",                                                  
+      14 +        "A per-practice defect or error rate covering several f
+         +ields (not just one column's missingness) is tabulated or chart
+         +ed with some notion of expected variation (control or funnel li
+         +mits, or a comparison to the overall rate), and P04 and P07 are
+         + singled out as outliers",                                     
+      15          "The shift of practice P04 towards Proxy dm_type codes 
+          from 2017 onwards is detected and flagged as a recording-practi
+          ce artefact (drift)",
+      16          "Duplicate patient_id records are counted",
+      17          "Non-standard sex codes (Female, Male, U, f) and placeh
+          older values (999 in hba1c, -1 in bmi) are identified rather th
+          an treated as valid data",
+
+● Update(.claude\skills\data-quality-evaluation\evals\evals.json)
+  ⎿  Added 2 lines, removed 1 line
+      53          "The plan includes a checkpoint or gate that stops or q
+          uarantines the feed from entering signal detection when quality
+           breaches the agreed standard",
+      54          "The plan assigns ownership and a feedback loop to the 
+          vendor / data creators, emphasising prevention at source over r
+          epeated cleaning",
+      55          "The plan states an explicit acceptance standard (e.g. 
+          percentage of perfect records) and justifies it",
+      56 -        "The plan is actionable for statisticians without engin
+         -eering tooling (spreadsheet or simple script level) and gives t
+         -ime estimates or a monthly routine"                            
+      56 +        "The plan is self-contained (every script or template i
+         +t relies on is included in the deliverable, nothing imported fr
+         +om an external path), runnable with spreadsheet-level or single
+         +-script tooling, and states a monthly routine with roles and a 
+         +total person-hours estimate under about three hours",          
+      57 +        "The plan includes a periodic accuracy check against an
+         + independent reference (e.g. tracing a sample of cases back to 
+         +the safety database), since automated rules cannot measure accu
+         +racy"                                                          
+      58        ]
+      59      }
+      60    ]
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Skill validates. Two housekeeping items remain: drop the compiled cache from
+  the skill folder and ignore Python caches in the repo. Then I'll report.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● The skill is built, tested against baselines, revised once from the results,
+  and left uncommitted in the repo for you to review.
+
+  What the research found
+
+  No joint paper by all three exists, and none of them has written on data
+  quality in Significance. Their intersection is the RSS Real World Data Science
+  platform: Redman and Hoerl are columnists, Tate runs the "Data Quality Under
+  the Lens" column, and all three converge on the 22 October 2026 Edinburgh
+  conference your repo is named for. The verified corpus is 60-odd items, listed
+  with URLs in bibliography.md
+  (.claude/skills/data-quality-evaluation/references/bibliography.md). The skill
+  draws on Redman's Friday Afternoon Measurement, perfect-record score, rule of
+  ten and fix-at-source modes; Hoerl's data pedigree, "right data" versus "data
+  are right", statistical thinking and SPC on data; and Tate's tiered
+  definitions, triangulation, unit-by-period metrics, five failure patterns and
+  initial data analysis.
+
+  What was built
+
+  The skill lives at .claude/skills/data-quality-evaluation/:
+
+  - SKILL.md (.claude/skills/data-quality-evaluation/SKILL.md) gives a
+    seven-step workflow from framing the data customer to a verdict, plus a
+    plan-design branch and a report template.
+  - Seven reference files: one per author, a pedigree interview, the rules
+    schema, the full report template and the bibliography.
+  - dq_profile.py (.claude/skills/data-quality-evaluation/scripts/dq_profile.py)
+    computes completeness, rule violations, a perfect-record score with Wilson
+    interval, an error Pareto, p-charts by period and group, date spikes and a
+    FAM worksheet. It needs only pandas and numpy.
+  - Three evals with two synthetic datasets carrying planted defects.
+
+  Test results
+
+  Each eval ran once with the skill and once without, then an independent grader
+  scored both.
+
+  ┌────────────────────────────────────────┬────────────┬───────────────┐
+  │                  Eval                  │ With skill │ Without skill │
+  ├────────────────────────────────────────┼────────────┼───────────────┤
+  │ Diabetes extract, incidence fitness    │ 13/13      │ 8/13          │
+  ├────────────────────────────────────────┼────────────┼───────────────┤
+  │ Lab results with hidden unit mix       │ 8/9        │ 7/9           │
+  ├────────────────────────────────────────┼────────────┼───────────────┤
+  │ Pharmacovigilance feed monitoring plan │ 9/9        │ 5/9           │
+  └────────────────────────────────────────┴────────────┴───────────────┘
+
+  Both configurations detected nearly every planted defect. The skill's gain was
+  structure: a record-level score with a bar, an explicit field list, a Pareto,
+  prevent-versus-clean recommendations, and monitoring. The cost was roughly
+  double the tokens and six extra minutes per run. I made three revisions after
+  grading: a proportionality section to curb over-building, an instruction to
+  read a one-unit step change as a measurement-system change first (both runs
+  missed the planted analyser shift's cause), and a note to copy the profiler
+  into any team deliverable. I also tightened two weak assertions.
+
+  Open the review page at
+  C:\Users\casaestb\AppData\Local\Temp\dqe_review_iteration1.html to read each
+  report and leave feedback; the Benchmark tab has the numbers above.
+
+  Decisions I made that you may want to change: the skill sits in the repo
+  rather than your personal skills folder, it targets tabular data and plan
+  design rather than Databricks tables directly, and the eval fixtures are
+  synthetic. Nothing is committed; the working tree shows the new .claude/
+  folder and a .gitignore addition for Python caches.

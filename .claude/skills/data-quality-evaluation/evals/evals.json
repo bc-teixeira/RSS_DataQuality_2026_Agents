@@ -1,0 +1,61 @@
+{
+  "skill_name": "data-quality-evaluation",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I've got an extract from our GP diabetes registry at evals/files/diabetes_registry_extract.csv. We want to use it to estimate diabetes incidence trends by year, 2005 to 2020, across the 8 practices for a paper. Can you check the data quality and tell me whether it's usable for that? Columns are patient_id, practice_id, sex, birth_date, registration_date, diagnosis_date, dm_type (T1 / T2 / Unspecified / Proxy, where Proxy means a 'seen in diabetic clinic' type code), hba1c_mmol_mol, bmi, insulin_rx, oad_rx, death_date. Write the assessment up as a markdown report I can share with the study team.",
+      "expected_output": "A markdown data quality report that leads with a fitness-for-use verdict for the incidence-trend question, reports a record-level perfect-record score with an interval over named critical fields, ranks error types, detects the 2006-04-01 date spike, the practice-level variation (P04 proxy coding drift from 2017, P07 HbA1c missingness), duplicates, invalid sex codes, Type 1 without insulin, death before diagnosis, placeholder values (999 HbA1c, -1 BMI), recommends tiered definitions / sensitivity analysis across dm_type categories, distinguishes fix-at-source from cleaning, and lists limitations (accuracy unmeasured, pedigree unknowns).",
+      "files": ["evals/files/diabetes_registry_extract.csv"],
+      "expectations": [
+        "The report opens with an explicit fitness-for-use verdict (fit / fit with caveats / not fit) tied to the stated incidence-trend question",
+        "A record-level perfect-record (or equivalent all-critical-fields-correct) percentage is reported with a confidence interval and compared against an explicit acceptance bar",
+        "The critical data elements used for scoring are listed explicitly",
+        "The 2006-04-01 diagnosis-date spike is detected and interpreted as probable retrospective or batch entry",
+        "A per-practice defect or error rate covering several fields (not just one column's missingness) is tabulated or charted with some notion of expected variation (control or funnel limits, or a comparison to the overall rate), and P04 and P07 are singled out as outliers",
+        "The shift of practice P04 towards Proxy dm_type codes from 2017 onwards is detected and flagged as a recording-practice artefact (drift)",
+        "Duplicate patient_id records are counted",
+        "Non-standard sex codes (Female, Male, U, f) and placeholder values (999 in hba1c, -1 in bmi) are identified rather than treated as valid data",
+        "Cross-field inconsistencies are reported: Type 1 patients with no insulin and death dates before diagnosis dates",
+        "The report recommends running the incidence estimate under tiered or alternative case definitions (e.g. excluding Proxy/Unspecified) and reporting the spread",
+        "Error types are ranked (Pareto-style) and the top ones are traced to a likely origin in the data-creating process",
+        "Recommendations distinguish fixing at the source / prevention from one-off cleaning and propose ongoing monitoring",
+        "A limitations section states what could not be assessed (e.g. accuracy against a reference, pedigree unknowns)"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Here's evals/files/hba1c_lab_results.csv, pulled from the lab information system feeds of our four sites (columns: patient_id, site, test_date, analyte, value, unit, result_entered_date). I need the proportion of patients with HbA1c under 53 mmol/mol per site per quarter for a quality dashboard. Before I build it, can you sanity-check the data for me and tell me if there's anything I should worry about?",
+      "expected_output": "An assessment that discovers Site_C's values are on a different scale (percent NGSP rather than mmol/mol despite the unit column), Site_D's upward shift from July 2024 (analyser change), zero placeholder values, duplicated result rows and Site_B's long entry lag; concludes the data is not fit for the <53 mmol/mol metric without unit harmonisation and investigation of Site_D; raises measurement-system / pedigree questions; and gives a verdict rather than only a list.",
+      "files": ["evals/files/hba1c_lab_results.csv"],
+      "expectations": [
+        "The response identifies that Site_C's values are on a different scale (consistent with percent rather than mmol/mol) despite the unit column saying mmol/mol",
+        "The response identifies the upward shift in Site_D values from around July 2024 and suggests a measurement-system cause (analyser or method change) to investigate",
+        "Zero values are flagged as placeholders or implausible rather than counted as controlled HbA1c",
+        "Duplicate result rows are counted",
+        "Entry lag (result_entered_date minus test_date) is examined and Site_B's long lag is reported as a timeliness problem",
+        "The response gives an explicit verdict that the data is not fit for the <53 mmol/mol dashboard metric as-is, and names what must happen first (unit harmonisation, Site_D investigation)",
+        "The response quantifies the impact on the metric (e.g. Site_C would appear ~100% controlled) rather than only listing issues",
+        "The response asks or recommends pedigree / measurement-system questions (which analyser, which unit convention, who enters results) rather than only cleaning the file",
+        "Variation across sites is shown explicitly (per-site summary), not only pooled statistics"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Our pharmacovigilance team receives a monthly case-listing feed from a vendor, about 5,000 rows each month with case_id, receipt_date, product, event_term (MedDRA PT), seriousness, country, reporter_type, outcome. Nobody formally checks it before it goes into signal detection. Can you design a data quality check and monitoring process for this feed that the team can actually run every month? We're statisticians, not data engineers.",
+      "expected_output": "A practical measurement system: define the data customer (signal detection) and 10-15 critical elements with error definitions; a first Friday Afternoon Measurement style manual review of the last 100 cases to get a perfect-record baseline; pedigree questions for the vendor; automated monthly rules with a record-level perfect-record rate charted over time with control limits (p-chart); checkpoints that hold the feed when limits are breached; feedback to the vendor; ownership; re-evaluation when the feed's use changes; cost framed via rule of ten.",
+      "files": [],
+      "expectations": [
+        "The plan names signal detection as the data customer and derives critical data elements and error definitions from what signal detection needs",
+        "The plan includes an initial manual review of a recent sample of records (e.g. last 100 cases) producing a record-level perfect-record percentage baseline",
+        "The plan includes a list of pedigree / provenance questions to ask the vendor (how cases are collected, coded, deduplicated, what is excluded, MedDRA version, timeliness)",
+        "The plan specifies concrete automated monthly checks per field (completeness, allowed values, date plausibility, duplicates, cross-field consistency such as seriousness vs outcome)",
+        "The plan tracks the record-level perfect-record rate over time on a control chart with limits and defines what happens when a point is out of control",
+        "The plan includes a checkpoint or gate that stops or quarantines the feed from entering signal detection when quality breaches the agreed standard",
+        "The plan assigns ownership and a feedback loop to the vendor / data creators, emphasising prevention at source over repeated cleaning",
+        "The plan states an explicit acceptance standard (e.g. percentage of perfect records) and justifies it",
+        "The plan is self-contained (every script or template it relies on is included in the deliverable, nothing imported from an external path), runnable with spreadsheet-level or single-script tooling, and states a monthly routine with roles and a total person-hours estimate under about three hours",
+        "The plan includes a periodic accuracy check against an independent reference (e.g. tracing a sample of cases back to the safety database), since automated rules cannot measure accuracy"
+      ]
+    }
+  ]
+}

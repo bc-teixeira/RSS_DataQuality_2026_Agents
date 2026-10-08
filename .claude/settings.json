@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Read(//c/Users/casaestb/.claude/skills/synced/0f1d021f-3cc9-455f-9f28-472f6f51b372_5609c51f-7db2-4bc1-a301-ba1828c09db6/skill-creator/references/**)",
+      "Read(//c/Users/casaestb/.claude/skills/synced/0f1d021f-3cc9-455f-9f28-472f6f51b372_5609c51f-7db2-4bc1-a301-ba1828c09db6/skill-creator/agents/**)",
+      "Read(//c/Users/casaestb/.claude/skills/synced/0f1d021f-3cc9-455f-9f28-472f6f51b372_5609c51f-7db2-4bc1-a301-ba1828c09db6/skill-creator/**)"
+    ]
+  }
+}
