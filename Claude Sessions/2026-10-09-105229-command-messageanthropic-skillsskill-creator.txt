@@ -1,0 +1,351 @@
+
+> /anthropic-skills:skill-creator Use the skill-creator skill to build a new
+skill called "database-context" that turns documentation in the /data folder
+into a single Database_Context.md file.
+It should convert source docs (PDF, Word, Excel, Markdown) to Markdown, extract
+business context, table and variable definitions, cohort rules, code lists and
+known limitations, then synthesize everything into a structured context
+document.
+Please check database information requirements on /data-quality-evaluation
+skill. The skill should also use literature search to acquire extra information
+on the dataset if needed.
+No database connector is needed: all schema, data dictionaries and
+documentation live in /data, so profiling and validation must rely only on
+those files, with no patient-level data exposed.
+Before writing anything, interview me: what is the expected folder layout in
+/data, which publication-search step is wanted, and which output sections
+matter most?
+
+● I'll read the existing skill's database requirements and check the data folder
+  first, so the interview questions are specific.
+
+  Searched for 4 patterns, read 1 file (ctrl+o to expand)
+
+● In /data I found MIMIC-IV-format CSVs, documentation (READMEs, official docs,
+  one PDF), and a manifest file, but no Word or Excel files yet. For the
+  data-quality evaluation, I'll need answers to the pedigree questions—why, who,
+  what, when, where, how—covering purpose, definitions, population gaps, time
+  coverage, sources, and measurement handling, flagging anything unanswered as a
+  limitation. · summary
+
+● User answered Claude's questions:
+  ⎿  · What /data layout should the skill expect? → Flat /data
+     · Which publication-search step do you want? → Gap-driven PubMed search
+     (Recommended)
+     · Which Database_Context.md sections matter most? (pick all that are
+     priorities; the rest get shorter treatment) → Pedigree & business context,
+     Tables & variable definitions, Known limitations & DQ rules seed
+
+  Read 1 file, ran 1 shell command (ctrl+o to expand)
+
+● Your answers are in. Flat /data conflicts with the nested layout that's there
+  now, so I'll make the scan recursive, which handles both. Writing the draft
+  skill now.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Write(.claude\skills\database-context\scripts\convert_docs.py)
+  ⎿  Wrote 170 lines to
+     .claude\skills\database-context\scripts\convert_docs.py
+       1 #!/usr/bin/env python3
+         te an inventory.
+       3
+       5   DATA_DIR  default: data
+       6   OUT_DIR   default: <DATA_DIR>/_converted   (one .md per source
+       7
+       8 Privacy rule: only documentation is converted. Tabular data file
+       9 .sas7bdat, .dta, ...) are listed by name and size and are NEVER
+         opened, because they may
+         o MAX_XLSX_ROWS rows per
+     … +195 lines (ctrl+o to expand)
+
+● Write(.claude\skills\database-context\SKILL.md)
+  ⎿  Wrote 67 lines to .claude\skills\database-context\SKILL.md
+      1 ---
+      2 name: database-context
+        ation in the /data folder (PDF, Word, Excel, Markdown), covering
+        pedigree and business context, table and variable definitions, co
+        hort rules, code lists and known limitations, plus a seed of data
+        t, summarise, onboard to or "get context on" a database, dataset,
+         EHR, registry or claims source, asks what the tables and variabl
+        es mean, wants a data dictionary or schema overview, needs the pe
+        ike "read the docs in /data", "what do we know about this dataset
+        ", "prepare c
+     … +147 lines (ctrl+o to expand)
+
+● Write(.claude\skills\database-context\references\context-template.md)
+  ⎿  Wrote 57 lines to
+     .claude\skills\database-context\references\context-template.md
+      1 # Database_Context.md template
+      2
+      3 Use this structure exactly so downstream skills can find sections
+         by heading. Omit nothing: write "Not documented" where
+      4 the sources are silent.
+      6 ```markdown
+      7 # Database context: <dataset name and version>
+      8
+      9 Generated: <date> from <n> documents in /data. Documentation only
+        ; no patient-level data was read.
+     … +62 lines (ctrl+o to expand)
+
+● Quick test of the converter against the real /data folder, writing output to
+  the scratchpad so nothing lands in the repo.
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● I've drafted the database-context skill and tested its converter on your /data
+  folder. I haven't run the skill-creator test and review loop yet, because I
+  wanted your sign-off on the draft first.
+
+  I put the skill at .claude/skills/database-context/. It has three files:
+  - SKILL.md (.claude/skills/database-context/SKILL.md) holds the workflow:
+    convert, extract, close gaps by literature search, synthesise, then run
+    checks.
+  - convert_docs.py (.claude/skills/database-context/scripts/convert_docs.py)
+    does the document conversion.
+  - context-template.md
+    (.claude/skills/database-context/references/context-template.md) is the
+    structure of Database_Context.md.
+
+  How your interview answers are reflected:
+  - Layout: you chose flat /data, but your repo is nested (documentation/,
+    raw/). The converter scans recursively, so both work. Tell me if you meant a
+    strict flat requirement.
+  - Literature search: it only runs after extraction, and only for pedigree
+    questions the documents leave unanswered. It searches PubMed for the
+    dataset's description and validation papers. Each fact gets a tag, a PMID or
+    DOI, and the queries run are recorded.
+  - Sections: pedigree and business context, tables and variables, and known
+    limitations plus the data-quality rules seed are written in full. Cohort
+    rules and code lists get shorter treatment. The pedigree section answers the
+    same questions the data-quality-evaluation skill asks. The rules seed uses
+    that skill's rules.json format and cites a source for each rule.
+  - No patient-level data: CSV, parquet and similar files are listed by name and
+    size and never opened. Spreadsheets are capped at 500 rows. The skill
+    forbids example rows and individual dates in the output.
+
+  On your /data folder, the converter produced 58 Markdown files, with 0
+  failures. It skipped 34 data files, including patients.csv and
+  date_offsets.csv. It converted the Johnson 2023 PDF (a flat text dump, so
+  tables need checking) and manifest_00_get_the_data.csv.
+
+  pypdf and python-docx are installed. openpyxl isn't, so Excel files will need
+  pip install openpyxl. There are no Excel or Word files in /data today.
+
+  Next, I'd run two or three test prompts, each with and without the skill, and
+  open the review viewer. One would build the full context for this
+  MIMIC-IV/TinyEHR folder. Another would check that the privacy rule holds, and
+  a third that the literature step fires only for real gaps.
+
+● User answered Claude's questions:
+  ⎿  · How do you want to proceed? → please install the missing libraries. The
+     the final database context, created by the context creator skill,  should
+     be a skill itself, so this skill should be a skill creator.
+  ⎿  1 skill available
+
+  Ran 1 shell command (ctrl+o to expand)
+
+● Libraries are installed. Now I'll change the design so the skill outputs a new
+  skill, with Database_Context.md as that skill's reference file.
+
+● Update(.claude\skills\database-context\SKILL.md)
+  ⎿  Added 16 lines, removed 2 lines
+      50  - If nothing relevant is found, record that in "Open questions"
+           with the queries tried.
+      51  - Local papers already in `/data` count as documentation, not l
+          iterature search; cite them as sources.
+      52  
+      53 -### 4. Synthesise                                              
+      53 +### 4. Synthesise and package as a skill                       
+      54  
+      55 -Fill `references/context-template.md` and save as `Database_Con
+         -text.md` (default location: repository root or the folder the u
+         -ser names; ask only if ambiguous). Keep the three priority sect
+         -ions (pedigree, tables/variables, limitations and rules seed) c
+         -omplete and detailed, and the cohort and code-list sections con
+         -cise. Put a short "How to use this file" and a source list at t
+         -he top and bottom.                                             
+      55 +The deliverable is a new skill that carries the dataset knowled
+         +ge, so any later session loads it automatically when the datase
+         +t comes up. Create it at `.claude/skills/<dataset-slug>-context
+         +/` (slug from the dataset name, lowercase, hyphenated, e.g. `mi
+         +mic-iv-context`; confirm the name with the user if the dataset 
+         +has several plausible names):                                  
+      56  
+      57 +```                                                            
+      58 +<dataset-slug>-context/                                        
+      59 +├── SKILL.md                      generated from references/gen
+         +erated-skill-template.md                                       
+      60 +└── references/                                                
+      61 +    ├── Database_Context.md       the single synthesised file (
+         +references/context-template.md)                                
+      62 +    └── rules-seed.json           optional: the section 6 rules
+         + as one valid rules.json                                       
+      63 +```                                                            
+      64 +                                                               
+      65 +Fill `references/context-template.md` for `Database_Context.md`
+         +. Keep the three priority sections (pedigree, tables/variables,
+         + limitations and rules seed) complete and detailed, and the coh
+         +ort and code-list sections concise. Put a short "How to use thi
+         +s file" and a source list at the top and bottom.               
+      66 +                                                               
+      67 +Fill `references/generated-skill-template.md` for the generated
+         + `SKILL.md`. Its description must name the dataset, its aliases
+         + and the tables, so the skill triggers on questions like "what 
+         +does `admittime` mean" or "which table has lab results" without
+         + the user naming the skill. Keep its body short: the dataset in
+         + three lines, which sections of `Database_Context.md` to read f
+         +or which question, the no-patient-level-data rule, and the inst
+         +ruction to feed the file into `data-quality-evaluation` as its 
+         +pedigree input. Do not duplicate the context in the SKILL.md; t
+         +he detail lives in the reference file so it loads only when nee
+         +ded. If `Database_Context.md` exceeds roughly 300 lines, give i
+         +t a table of contents.                                         
+      68 +                                                               
+      69 +Do not copy converted source files into the generated skill; th
+         +ey can contain licence-restricted text and bulk. Cite their ori
+         +ginal paths instead. Do not overwrite an existing `<dataset-slu
+         +g>-context` skill without showing the user what changes.       
+      70 +                                                               
+      71  **DQ rules seed.** Emit candidate rules in the format of `data-
+          quality-evaluation/references/rules-format.md` (a `rules.json` 
+          fragment per table: `not_null`, `unique`, `allowed`, `regex`, `
+          type`, `min`, `max`, and `cross_field` expressions). Only write
+           a rule when a document supports it (for example "`dischtime` i
+          s after `admittime`", an allowed-values list, a documented key)
+          . Mark each rule with its source. Rules are hypotheses about th
+          e data's meaning, not measured quality; say so.
+      72  
+      73  ### 5. Check before handing over
+
+● Update(.claude\skills\database-context\SKILL.md)
+  ⎿  Added 3 lines, removed 1 line
+      78  - Every `from literature` or `inferred` fact is tagged; every o
+          ther fact has a source path.
+      79  - Open questions list matches the unanswered pedigree questions
+          .
+      80  
+      81 -Finish by telling the user: the output path, which sources were
+         - converted or skipped, which pedigree questions remain open, an
+         -d how many rules were seeded. Offer to run `data-quality-evalua
+         -tion` with this file as its pedigree input.                    
+      81 +- The generated `SKILL.md` has valid frontmatter (`name` matche
+         +s the folder, description names the dataset) and points to `ref
+         +erences/Database_Context.md`.                                  
+      82 +                                                               
+      83 +Finish by telling the user: the path of the generated skill, wh
+         +ich sources were converted or skipped, which pedigree questions
+         + remain open, and how many rules were seeded. Offer to run `dat
+         +a-quality-evaluation` with this file as its pedigree input.    
+
+● Update(.claude\skills\database-context\SKILL.md)
+  ⎿  Added 1 line, removed 1 line
+      1  ---
+      2  name: database-context
+      3 -description: Build a single Database_Context.md from the documen
+        -tation in the /data folder (PDF, Word, Excel, Markdown), coverin
+        -g pedigree and business context, table and variable definitions,
+        - cohort rules, code lists and known limitations, plus a seed of 
+        -data-quality rules. Use this skill whenever the user wants to do
+        -cument, summarise, onboard to or "get context on" a database, da
+        -taset, EHR, registry or claims source, asks what the tables and 
+        -variables mean, wants a data dictionary or schema overview, need
+        -s the pedigree answers before a data quality evaluation, or says
+        - things like "read the docs in /data", "what do we know about th
+        -is dataset", "prepare context for the data-quality-evaluation sk
+        -ill". Use it even when the user does not mention Database_Contex
+        -t.md. Works from documentation only, with no database connection
+        - and no patient-level data.                                     
+      3 +description: Generate a dataset-specific context skill (containi
+        +ng a single Database_Context.md) from the documentation in the /
+        +data folder (PDF, Word, Excel, Markdown), covering pedigree and 
+        +business context, table and variable definitions, cohort rules, 
+        +code lists and known limitations, plus a seed of data-quality ru
+        +les. Use this skill whenever the user wants to document, summari
+        +se, onboard to or "get context on" a database, dataset, EHR, reg
+        +istry or claims source, asks what the tables and variables mean,
+        + wants a data dictionary or schema overview, needs the pedigree 
+        +answers before a data quality evaluation, or says things like "r
+        +ead the docs in /data", "what do we know about this dataset", "p
+        +repare context for the data-quality-evaluation skill". Use it ev
+        +en when the user does not mention Database_Context.md. Works fro
+        +m documentation only, with no database connection and no patient
+        +-level data.                                                    
+      4  ---
+      5  
+      6  # database-context
+
+● Update(.claude\skills\database-context\SKILL.md)
+  ⎿  Added 1 line, removed 1 line
+       5  
+       6  # database-context
+       7  
+       8 -Turn whatever documentation sits in `/data` into one structured
+         - file, `Database_Context.md`, that a person or another skill (n
+         -otably `data-quality-evaluation`) can read instead of re-readin
+         -g dozens of source documents. The file answers the pedigree que
+         -stions that `data-quality-evaluation` asks about an unfamiliar 
+         -source (see its `references/pedigree-questions.md`), so a good 
+         -context file lets that skill skip the interview and go straight
+         - to rules and profiling.                                       
+       8 +Turn whatever documentation sits in `/data` into a new skill (`
+         +<dataset>-context`) whose reference is one structured file, `Da
+         +tabase_Context.md`, that a person or another skill (notably `da
+         +ta-quality-evaluation`) can read instead of re-reading dozens o
+         +f source documents. The file answers the pedigree questions tha
+         +t `data-quality-evaluation` asks about an unfamiliar source (se
+         +e its `references/pedigree-questions.md`), so a good context fi
+         +le lets that skill skip the interview and go straight to rules 
+         +and profiling.                                                 
+       9  
+      10  ## Ground rules
+      11  
+
+● Write(.claude\skills\database-context\references\generated-skill-template.md)
+  ⎿  Wrote 31 lines to
+     .claude\skills\database-context\references\generated-skill-template.md
+      1 # Template for the generated <dataset-slug>-context/SKILL.md
+      3 Replace every `<...>`. Keep it under ~40 lines; the detail belong
+        s in `references/Database_Context.md`.
+      5 ```markdown
+      7 name: <dataset-slug>-context
+      8 description: Documentation-derived context for <dataset full name
+        ey table names>), variable definitions, cohort rules, code lists,
+         known limitations and candidate data-quality rules. Use this ski
+        eans, how tables join, how patients/units enter the data, which c
+        study, query or data qu
+     … +39 lines (ctrl+o to expand)
+  ⎿  1 skill available
+
+● I installed the missing libraries and changed the design so the skill's output
+  is itself a skill. I haven't run it end to end yet.
+
+  - Libraries: openpyxl, pypdf and python-docx are installed and import
+    correctly. Excel and Word conversion should now work, though I haven't run
+    either on a real file.
+  - New design: database-context (.claude/skills/database-context/SKILL.md) now
+    generates a skill called <dataset-slug>-context, for example
+    mimic-iv-context, under .claude/skills/. The generated skill contains:
+    - a short SKILL.md whose description names the dataset, its aliases and key
+      tables, so it triggers on questions like "what does admittime mean";
+    - references/Database_Context.md, the single synthesised file;
+    - an optional references/rules-seed.json with the candidate data-quality
+      rules.
+  - Generated skill instructions: the skill tells future sessions to cite the
+    section they used. It also tells them to hand the pedigree section to
+    data-quality-evaluation, and to regenerate from /data instead of editing by
+    hand.
+  - Guardrails: converted source files aren't copied into the generated skill,
+    because they may carry licence-restricted text. An existing context skill is
+    not overwritten without showing you the changes.
+  - Template: I added generated-skill-template.md
+    (.claude/skills/database-context/references/generated-skill-template.md) as
+    the template for the generated skill's SKILL.md.
+
+  Next I'd run the skill on your MIMIC-IV/TinyEHR folder. That would produce
+  mimic-iv-context, and I'd compare it with a no-skill baseline in the review
+  viewer. The 58 converted documents are a large read, so I'd split the
+  per-table extraction across subagents. The skill's literature step also needs
+  the PubMed connector, which showed as available this session.
+
+  Should I go ahead with that run?

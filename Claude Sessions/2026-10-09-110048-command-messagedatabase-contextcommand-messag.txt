@@ -1,0 +1,204 @@
+
+> /database-context
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+● Dataset identified: TinyEHR, a 100-patient derivative of MIMIC-IV Demo v2.2.
+  I'm now reading the MIMIC-IV module docs and the paper for table and variable
+  details.
+
+  Read 2 files, ran 3 shell commands (ctrl+o to expand)
+
+● Now ICU and note modules.
+
+  Read 1 file, ran 4 shell commands (ctrl+o to expand)
+
+● Now the literature search for the gaps (validation, data quality, bias,
+  TinyEHR/demo).
+
+  Called PubMed 9 times, ran 2 shell commands (ctrl+o to expand)
+
+● Reading is done, and I'm now writing the generated skill: the SKILL.md, the
+  main Database_Context.md and the rules seed.
+
+● Write(.claude\skills\tinyehr-context\SKILL.md)
+  ⎿  Wrote 24 lines to .claude\skills\tinyehr-context\SKILL.md
+      1 ---
+      2 name: tinyehr-context
+        iases MIMIC-IV Clinical Database Demo v2.2 derivative, "tinyehr_m
+        imic_format", BIDMC EHR demo, MIMIC-IV demo): purpose and provena
+        nce, tables (patients, admissions, transfers, icustays, labevents
+        ions, cohort rules, code lists, known limitations and candidate d
+        ata-quality rules. Use this skill whenever the user asks what a t
+        able or variable in TinyEHR or the MIMIC-IV demo means (e.g. admi
+         holds labs, vitals or notes, how tables join, how patients enter
+         the data, whi
+     … +40 lines (ctrl+o to expand)
+
+● Write(.claude\skills\tinyehr-context\references\Database_Context.md)
+  ⎿  Wrote 424 lines to
+     .claude\skills\tinyehr-context\references\Database_Context.md
+      1 # Database context: TinyEHR v0.2.0 (MIMIC format; derived from MI
+      2
+      3 Generated: 2026-10-09 from 58 converted documents in /data (plus
+        no patient-level data was read.
+      5 ## How to use this file
+      6 Single reference for what TinyEHR contains and what it means, so
+        ers and section 6 as its starting rules. Tags: `inferred` = not s
+        tated by a document, deduced; `from literature` = external paper
+        ).
+        inyehr/A
+     … +935 lines (ctrl+o to expand)
+  ⎿  1 skill available
+
+● Update(.claude\skills\tinyehr-context\references\Database_Context.md)
+  ⎿  Added 1 line, removed 1 line
+      59  | d_items | icu | ICU concept | itemid | 4,014 | ICU dictionary
+           |
+      60  | caregiver | icu | caregiver | caregiver_id | 15,468 | List of
+           ICU caregiver ids |
+      61  | noteevents | notes | generated clinical note | note_id | 4,58
+          0 | LLM-generated notes (14 types); replaces MIMIC-IV-Note disc
+          harge/radiology tables |
+      62 -| metadata/date_offsets (file, not a table in ABOUT's count of 
+         -33... see §8) | metadata | patient | subject_id inferred | 100 
+         -inferred | Per-patient date-shift offsets |                    
+      62 +| date_offsets (raw/metadata) | metadata | patient `inferred` |
+         + subject_id `inferred` | Not documented | Per-patient date-shif
+         +t offsets; counted as the 33rd "table" in ABOUT (§8 Q12) |     
+      63  
+      64  ### 2.2 Join map
+      65  | From | To | Keys | Cardinality | Notes |
+
+● Update(.claude\skills\tinyehr-context\references\Database_Context.md)
+  ⎿  Added 1 line, removed 1 line
+      16  | Why was it collected? | Underlying data: routine clinical car
+          e, provider orders, monitoring and billing at BIDMC; "not expli
+          citly for retrospective analysis". MIMIC-IV was published to su
+          pport research and education. TinyEHR was built for learning, p
+          rototyping and agentic-AI experiments, not clinical analysis ("
+          should not be used for clinical analysis, medical decision-maki
+          ng, or patient care"). | PAPER (Background, Methods); MIMIC:abo
+          ut/concepts.md; README (caution box) |
+      17  | Who recorded it, and with what training/incentive? | Hospital
+           staff in routine care: nurses chart ICU observations and valid
+          ate them (`storetime`); bedside staff scan barcodes in eMAR; pr
+          oviders enter orders (POE); trained coders assign ICD diagnoses
+           after reading signed notes, with "few incentives" to rank `seq
+          _num` perfectly; billing staff assign DRG/HCPCS. Notes in TinyE
+          HR were written by an LLM (Claude Opus 4.6), not clinicians. | 
+          MIMIC:modules/hosp/diagnoses_icd.md; MIMIC:modules/hosp/emar.md
+          ; PAPER (Billing); ABOUT §3 |
+      18  | What population does it represent, who is missing? | Source M
+          IMIC-IV: adults (≥18 at first visit) admitted to the ED or an I
+          CU at BIDMC 2008-2019, excluding people on an enhanced-protecti
+          on list; neonates removed (v2.0); a test-set subset of subject_
+          ids held out (v2.1). Demo: 100 patients chosen as a subset (sel
+          ection method Not documented). Single US academic centre; not r
+          epresentative of any population. Out-of-hospital deaths are vis
+          ible only up to 1 year after discharge. | PAPER (Clinical cohor
+          t); MIMIC:about/changelog.md; DEMO; README (Known Limitations);
+           MIMIC:modules/hosp/patients.md |
+      19 -| Period covered, event vs recording date, lag, refresh cadence
+         - | Source years 2008-2019. TinyEHR dates are shifted per patien
+         -t to "realistic but fictional" years in the 2010s-2020s, chosen
+         - at random within each patient's `anchor_year_group`; so calend
+         -ar dates are not true dates and the real year is known only to 
+         -a 3-year band. Event time = `charttime` (hour-block, may preced
+         -e actual measurement); recording time = `storetime`. Lab `chart
+         -time` is usually specimen collection, well before result availa
+         -bility (`storetime`). eMAR present only after rollout (see limi
+         -tations L9). No refresh cadence: static snapshot; manifest retr
+         -ieval 2026-10-08, upstream commit `442e8dfd…` (data files) and 
+         -`81822278…` (docs). | ABOUT §1; MIMIC:about/concepts.md; MIMIC:
+         -modules/hosp/labevents.md; MANIFEST |                          
+      19 +| Period covered, event vs recording date, lag, refresh cadence
+         + | Source years 2008-2019. TinyEHR dates are shifted per patien
+         +t to "realistic but fictional" years in the 2010s-2020s, chosen
+         + at random within each patient's `anchor_year_group`; so calend
+         +ar dates are not true dates and the real year is known only to 
+         +a 3-year band. Event time = `charttime` (hour-block, may preced
+         +e actual measurement); recording time = `storetime`. Lab `chart
+         +time` is usually specimen collection, well before result availa
+         +bility (`storetime`). eMAR present only after rollout (see limi
+         +tation L10). No refresh cadence: static snapshot; manifest retr
+         +ieval 2026-10-08, upstream commit `442e8dfd…` (data files) and 
+         +`81822278…` (docs). | ABOUT §1; MIMIC:about/concepts.md; MIMIC:
+         +modules/hosp/labevents.md; MANIFEST |                          
+      20  | Sites, systems, vendors, instruments | BIDMC hospital-wide EH
+          R (SQL Server warehouse) for `hosp`; MetaVision (iMDsoft) ICU i
+          nformation system for `icu`; Online Medical Record (OMR) for ou
+          tpatient measurements; eMAR barcode system for administrations.
+           Some items are duplicated between systems (e.g. labs synced in
+          to chartevents). Pipeline: PostgreSQL at MIT, CSV export. TinyE
+          HR layer: Python build scripts, Parquet on HuggingFace, PyPI pa
+          ckage `tinyehr`. | PAPER (Acquisition); MIMIC:modules/icu/index
+          .md; MIMIC:modules/hosp/omr.md; README |
+      21  | How measured/validated; transformations, de-identification, e
+          xclusions | MIMIC build: single reproducible SQL build; integri
+          ty, consistency (e.g. ≥99% of ICU hadm_id have a billed diagnos
+          is; ≥99% of ICU stays have a heart rate) and de-identification 
+          unit tests. De-identification: HIPAA Safe Harbor with custom al
+          gorithms, random subject_id/hadm_id, patient-level date shift, 
+          PHI in free text replaced with `___`, ages >89 capped. TinyEHR 
+          changes: (1) per-patient date shift (offsets saved in raw/metad
+          ata/date_offsets.csv); (2) ICD decimal formatting; (3) 4,580 LL
+          M-generated notes (not clinician-validated). All other values "
+          identical to the original MIMIC-IV Demo". | PAPER (Technical Va
+          lidation, Deidentification); ABOUT |
+      22  | Access, licence, intended and prohibited uses | TinyEHR: ODbL
+          -1.0, no credentialing or DUA; derived versions must use the sa
+          me licence; citation required (README BibTeX 2026). Parent MIMI
+          C-IV demo also ODbL (PhysioNet). Full MIMIC-IV needs credential
+          ing and DUA (no re-identification, no sharing). Intended: learn
+          ing, prototyping, agent development. Not for clinical use or po
+          pulation inference. | README; DEMO; physionet_mimic_iv_demo_v2.
+          2/LICENSE.txt; tinyehr/LICENSE; PAPER (Access) |
+
+● Now the rules seed, generated by a script so the JSON stays valid.
+
+  Ran 3 shell commands (ctrl+o to expand)
+
+● I generated the skill at .claude/skills/tinyehr-context/. It has a short
+  SKILL.md (.claude/skills/tinyehr-context/SKILL.md), Database_Context.md
+  (.claude/skills/tinyehr-context/references/Database_Context.md) and
+  rules-seed.json (.claude/skills/tinyehr-context/references/rules-seed.json).
+
+  Name: The documentation shows the data is TinyEHR v0.2.0, a 100-patient
+  derivative of the MIMIC-IV Demo v2.2. I named the skill tinyehr-context rather
+  than mimic-iv-context because the data has three changes from MIMIC. Dates
+  are shifted again, ICD codes carry decimals, and the clinical notes are
+  LLM-generated. Tell me if you would prefer the MIMIC name.
+
+  Sources:
+  - Converted: all 58 documentation files, with none failed or skipped. That
+    includes the PDF paper, whose extracted tables I did not check against the
+    PDF layout.
+  - Listed only: 34 data files, by name and size. None were opened.
+  - Placeholder tags: I did not copy the patient-style example rows from the
+    TinyEHR README, so nothing patient-level is in the output.
+
+  Pedigree questions: All six are answered from the documents. These items
+  remain open in section 8:
+  - Patient selection: how the 100 demo patients were chosen is not documented.
+  - Date shifting: it is unclear whether anchor_year and several other date
+    fields were also shifted. The About document lists only dod as changed for
+    patients, but the README shows realistic anchor years.
+  - Conflicting statements:
+    - eMAR rollout is given as 2011–2013 in the table page and 2014–2016 in the
+      paper.
+    - Ages over 89 are capped at 91 in one place and 300 in another.
+  - Key and value gaps: primary keys for several event tables and value lists
+    for several categorical fields are undocumented.
+  - Generated notes: whether they match the structured data is unmeasured.
+  - Literature: PubMed turned up no validation or data-quality papers for
+    TinyEHR or MIMIC-IV. The only relevant hit is a 2026 teaching paper on the
+    MIMIC-IV Demo, which I recorded in section 7.
+
+  Rules seeded: 72 rule entries across 18 tables. They are hypotheses, and rules
+  that rest on inference or conflicting documents are labelled as such in their
+  source field. Some are expected to fail legitimately, for example
+  negative-length admissions from organ-donor accounts.
+
+  I also saved a short memory note about the skill. Should I run
+  data-quality-evaluation on /data/raw with this file as its pedigree input?

@@ -1,0 +1,818 @@
+{
+  "_note": "Hypotheses from documentation, not measured quality. Each table value is a rules.json for data-quality-evaluation; 'source' keys are ignored by the profiler. Conflict-prone or inferred rules are labelled in 'source'.",
+  "patients": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "MIMIC:modules/hosp/patients.md"
+      },
+      "gender": {
+        "not_null": true,
+        "source": "patients.md (NOT NULL); values undocumented"
+      },
+      "anchor_age": {
+        "not_null": true,
+        "type": "number",
+        "min": 18,
+        "max": 91,
+        "source": "patients.md (cap 91) vs concepts.md (300, conflict L6); adults only per PAPER"
+      },
+      "anchor_year": {
+        "not_null": true,
+        "type": "number",
+        "source": "patients.md"
+      },
+      "anchor_year_group": {
+        "not_null": true,
+        "regex": "^\\d{4} - \\d{4}$",
+        "source": "patients.md"
+      },
+      "dod": {
+        "not_null": false,
+        "type": "date",
+        "source": "patients.md"
+      }
+    },
+    "cross_field": []
+  },
+  "admissions": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "source": "admissions.md"
+      },
+      "hadm_id": {
+        "not_null": true,
+        "unique": true,
+        "type": "number",
+        "min": 2000000,
+        "max": 2999999,
+        "source": "admissions.md (upstream range; TinyEHR may differ)"
+      },
+      "admittime": {
+        "not_null": true,
+        "type": "date",
+        "source": "admissions.md"
+      },
+      "dischtime": {
+        "not_null": false,
+        "type": "date",
+        "source": "admissions.md"
+      },
+      "deathtime": {
+        "not_null": false,
+        "type": "date",
+        "source": "admissions.md"
+      },
+      "admission_type": {
+        "not_null": true,
+        "allowed": [
+          "AMBULATORY OBSERVATION",
+          "DIRECT EMER.",
+          "DIRECT OBSERVATION",
+          "ELECTIVE",
+          "EU OBSERVATION",
+          "EW EMER.",
+          "OBSERVATION ADMIT",
+          "SURGICAL SAME DAY ADMISSION",
+          "URGENT"
+        ],
+        "source": "admissions.md"
+      },
+      "hospital_expire_flag": {
+        "not_null": false,
+        "allowed": [
+          "0",
+          "1"
+        ],
+        "source": "admissions.md"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "discharge_not_before_admit",
+        "expr": "dischtime.isna() | (dischtime >= admittime)",
+        "source": "admissions.md; organ-donor accounts may legitimately fail (L18)"
+      },
+      {
+        "name": "deathtime_implies_expire_flag",
+        "expr": "deathtime.isna() | (hospital_expire_flag == 1)",
+        "source": "admissions.md; inferred"
+      },
+      {
+        "name": "ed_out_not_before_ed_reg",
+        "expr": "edouttime.isna() | edregtime.isna() | (edouttime >= edregtime)",
+        "source": "inferred"
+      }
+    ]
+  },
+  "transfers": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "source": "transfers.md"
+      },
+      "transfer_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "transfers.md"
+      },
+      "eventtype": {
+        "allowed": [
+          "ed",
+          "admit",
+          "transfer",
+          "discharge"
+        ],
+        "source": "transfers.md"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "out_not_before_in",
+        "expr": "outtime.isna() | (outtime >= intime)",
+        "source": "changelog v2.0 (outtime bug fix); inferred"
+      }
+    ]
+  },
+  "services": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "source": "services.md"
+      },
+      "curr_service": {
+        "allowed": [
+          "CMED",
+          "CSURG",
+          "DENT",
+          "ENT",
+          "EYE",
+          "GU",
+          "GYN",
+          "MED",
+          "NB",
+          "NBB",
+          "NMED",
+          "NSURG",
+          "OBS",
+          "ORTHO",
+          "OMED",
+          "PSURG",
+          "PSYCH",
+          "SURG",
+          "TRAUM",
+          "TSURG",
+          "VSURG"
+        ],
+        "source": "services.md"
+      },
+      "prev_service": {
+        "not_null": false,
+        "allowed": [
+          "CMED",
+          "CSURG",
+          "DENT",
+          "ENT",
+          "EYE",
+          "GU",
+          "GYN",
+          "MED",
+          "NB",
+          "NBB",
+          "NMED",
+          "NSURG",
+          "OBS",
+          "ORTHO",
+          "OMED",
+          "PSURG",
+          "PSYCH",
+          "SURG",
+          "TRAUM",
+          "TSURG",
+          "VSURG"
+        ],
+        "source": "services.md"
+      }
+    },
+    "cross_field": []
+  },
+  "diagnoses_icd": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "source": "diagnoses_icd.md"
+      },
+      "hadm_id": {
+        "not_null": true,
+        "source": "diagnoses_icd.md"
+      },
+      "seq_num": {
+        "not_null": true,
+        "type": "number",
+        "min": 1,
+        "max": 39,
+        "source": "diagnoses_icd.md; PAPER (max 39)"
+      },
+      "icd_version": {
+        "allowed": [
+          "9",
+          "10"
+        ],
+        "source": "diagnoses_icd.md"
+      }
+    },
+    "cross_field": []
+  },
+  "procedures_icd": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "subject_id": {
+        "not_null": true,
+        "source": "procedures_icd.md"
+      },
+      "hadm_id": {
+        "not_null": true,
+        "source": "procedures_icd.md"
+      },
+      "seq_num": {
+        "not_null": true,
+        "type": "number",
+        "min": 1,
+        "source": "procedures_icd.md"
+      },
+      "chartdate": {
+        "not_null": true,
+        "type": "date",
+        "source": "procedures_icd.md"
+      },
+      "icd_version": {
+        "allowed": [
+          "9",
+          "10"
+        ],
+        "source": "procedures_icd.md"
+      }
+    },
+    "cross_field": []
+  },
+  "hcpcsevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "hcpcs_cd": {
+        "not_null": true,
+        "regex": "^.{5}$",
+        "source": "hcpcsevents.md (CHAR(5))"
+      },
+      "seq_num": {
+        "not_null": true,
+        "type": "number",
+        "source": "hcpcsevents.md"
+      },
+      "chartdate": {
+        "not_null": true,
+        "type": "date",
+        "source": "changelog v1.0 (every row has a date)"
+      }
+    },
+    "cross_field": []
+  },
+  "labevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "labevent_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "labevents.md"
+      },
+      "subject_id": {
+        "not_null": true,
+        "source": "labevents.md"
+      },
+      "specimen_id": {
+        "not_null": true,
+        "source": "labevents.md"
+      },
+      "itemid": {
+        "not_null": true,
+        "source": "labevents.md"
+      },
+      "valuenum": {
+        "not_null": false,
+        "type": "number",
+        "source": "labevents.md"
+      },
+      "priority": {
+        "not_null": false,
+        "allowed": [
+          "ROUTINE",
+          "STAT"
+        ],
+        "source": "labevents.md (routine or stat; case assumed)"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "store_not_before_chart",
+        "expr": "storetime.isna() | charttime.isna() | (storetime >= charttime)",
+        "source": "labevents.md"
+      },
+      {
+        "name": "ref_range_ordered",
+        "expr": "ref_range_lower.isna() | ref_range_upper.isna() | (ref_range_lower <= ref_range_upper)",
+        "source": "labevents.md; inferred"
+      }
+    ]
+  },
+  "microbiologyevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "microevent_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "microbiologyevents.md"
+      },
+      "chartdate": {
+        "not_null": true,
+        "type": "date",
+        "source": "microbiologyevents.md"
+      },
+      "spec_type_desc": {
+        "not_null": true,
+        "source": "microbiologyevents.md"
+      },
+      "interpretation": {
+        "not_null": false,
+        "allowed": [
+          "S",
+          "R",
+          "I",
+          "P"
+        ],
+        "source": "microbiologyevents.md"
+      }
+    },
+    "cross_field": []
+  },
+  "emar": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "emar_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "emar.md"
+      },
+      "poe_id": {
+        "not_null": true,
+        "source": "emar.md"
+      },
+      "charttime": {
+        "not_null": true,
+        "type": "date",
+        "source": "emar.md"
+      },
+      "storetime": {
+        "not_null": true,
+        "type": "date",
+        "source": "emar.md"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "store_not_before_chart",
+        "expr": "storetime >= charttime",
+        "source": "emar.md; inferred"
+      }
+    ]
+  },
+  "poe": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "poe_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "poe.md"
+      },
+      "ordertime": {
+        "not_null": true,
+        "type": "date",
+        "source": "poe.md"
+      },
+      "order_status": {
+        "not_null": false,
+        "allowed": [
+          "Active",
+          "Inactive"
+        ],
+        "source": "poe.md"
+      }
+    },
+    "cross_field": []
+  },
+  "pharmacy": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "pharmacy_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "pharmacy.md"
+      },
+      "entertime": {
+        "not_null": true,
+        "type": "date",
+        "source": "pharmacy.md"
+      },
+      "sliding_scale": {
+        "not_null": false,
+        "allowed": [
+          "Y",
+          "N"
+        ],
+        "source": "pharmacy.md"
+      }
+    },
+    "cross_field": []
+  },
+  "prescriptions": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "pharmacy_id": {
+        "not_null": true,
+        "source": "prescriptions.md"
+      },
+      "drug": {
+        "not_null": true,
+        "source": "prescriptions.md"
+      },
+      "drug_type": {
+        "not_null": true,
+        "allowed": [
+          "MAIN",
+          "BASE",
+          "ADDITIVE"
+        ],
+        "source": "prescriptions.md"
+      }
+    },
+    "cross_field": []
+  },
+  "icustays": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "stay_id": {
+        "not_null": true,
+        "unique": true,
+        "source": "icustays.md"
+      },
+      "hadm_id": {
+        "not_null": true,
+        "source": "icustays.md"
+      },
+      "los": {
+        "type": "number",
+        "min": 0,
+        "source": "icustays.md; inferred bound"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "out_after_in",
+        "expr": "outtime >= intime",
+        "source": "icustays.md; inferred"
+      }
+    ]
+  },
+  "d_items": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "itemid": {
+        "not_null": true,
+        "unique": true,
+        "type": "number",
+        "min": 220001,
+        "source": "d_items.md (>220000)"
+      }
+    },
+    "cross_field": []
+  },
+  "procedureevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "valueuom": {
+        "not_null": false,
+        "allowed": [
+          "None",
+          "day",
+          "hour",
+          "min"
+        ],
+        "source": "procedureevents.md"
+      },
+      "statusdescription": {
+        "not_null": false,
+        "allowed": [
+          "Paused",
+          "FinishedRunning",
+          "Stopped"
+        ],
+        "source": "procedureevents.md"
+      }
+    },
+    "cross_field": []
+  },
+  "inputevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "statusdescription": {
+        "not_null": false,
+        "allowed": [
+          "Changed",
+          "Paused",
+          "FinishedRunning",
+          "Stopped",
+          "Flushed"
+        ],
+        "source": "inputevents.md"
+      }
+    },
+    "cross_field": [
+      {
+        "name": "end_not_before_start",
+        "expr": "endtime >= starttime",
+        "source": "inputevents.md; inferred"
+      }
+    ]
+  },
+  "noteevents": {
+    "placeholders": [
+      "",
+      "NA",
+      "N/A",
+      "NULL",
+      "null",
+      "None",
+      "-",
+      "?",
+      "UNKNOWN",
+      "9999",
+      "-999",
+      "999"
+    ],
+    "columns": {
+      "note_id": {
+        "not_null": true,
+        "unique": true,
+        "regex": "^\\d+-[A-Za-z]{2}-\\d{4}$",
+        "source": "ABOUT \u00a73 (convention subject-type-seq; zero-padded width inferred from one documented example, so treat as hypothesis)"
+      },
+      "note_type": {
+        "not_null": true,
+        "allowed": [
+          "Discharge summary",
+          "Physician",
+          "Nursing",
+          "Radiology",
+          "Nursing/other",
+          "ECG",
+          "Rehab Services",
+          "Respiratory",
+          "Echo",
+          "General",
+          "Case Management",
+          "Nutrition",
+          "Social Work",
+          "Consult"
+        ],
+        "source": "ABOUT \u00a73"
+      }
+    },
+    "cross_field": []
+  }
+}
