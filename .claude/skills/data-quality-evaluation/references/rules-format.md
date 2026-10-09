@@ -45,6 +45,12 @@ columns have been parsed. It must return a boolean Series where **True means the
 expression evaluates to NA are treated as passing (missingness is already counted by the column rules). Each
 failing record gets one error attributed to the rule name, which appears in the Pareto alongside column errors.
 
+The R version (`dq_profile.R`) translates the common pandas idioms automatically (`.isna()`, `.notna()`,
+`~`, `.isin([...])`, `(a - b).dt.days`, `True`/`False`) so the same file works in both. For anything else,
+write the rule in native R under an `r_expr` key instead of `expr`, for example
+`{"name": "bmi_consistent", "r_expr": "is.na(bmi) | bmi > 10"}`. Python-only methods such as `.str.contains()`
+need `r_expr` for R and `expr` for Python.
+
 ## Placeholders
 
 Strings in `placeholders` are treated as missing wherever they appear, and additionally reported as "placeholder

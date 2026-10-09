@@ -53,3 +53,6 @@ rsconnect/
 __pycache__/
 *.pyc
 
+
+# Downloaded data and documentation (re-create with code/00_Get_the_Data.R)
+data/

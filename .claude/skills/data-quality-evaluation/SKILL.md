@@ -90,6 +90,11 @@ python scripts/dq_profile.py <data.csv|parquet|xlsx> \
     [--fam-sample 100] [--out dq_output]
 ```
 
+An R port with identical checks, options, outputs and `rules.json` is available as `scripts/dq_profile.R`
+(`Rscript scripts/dq_profile.R <data> --critical ...`; needs only `jsonlite`). Use whichever language the user's
+team works in; on the test files both produce the same score, Pareto and flagged units. Apart from the
+`_record_index` in the FAM worksheet being 1-based in R, the outputs are interchangeable.
+
 It writes `dq_profile.json` (everything), `dq_summary.md` (human summary), `fam_worksheet.csv`
 (the last N records across the CDEs, with auto-flags and a blank `perfect_record` column for human review), and
 `pchart.png` / `pareto.png` / `completeness.png` when matplotlib is available. Build a `rules.json` from Step 1's
