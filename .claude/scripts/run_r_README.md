@@ -41,19 +41,33 @@ bash .claude/scripts/run_r.sh 4_Tests/01_Cohort_Tests.R
 
 ## Log Structure
 
+<<<<<<< HEAD
 ### Main Log Directory (`logs/`)
 Contains only the **latest log** for each R script:
 ```
 logs/
+=======
+### Main Log Directory (`6_Logs/`)
+Contains only the **latest log** for each R script:
+```
+6_Logs/
+>>>>>>> f768fb8fdde1d21e67ddf252f332a1c78b3ea398
 ├── 01_Cohort_20251027_143022.log          # Latest run
 ├── 02_Attrition_20251027_143155.log       # Latest run
 └── 03_Analysis_20251027_143340.log        # Latest run
 ```
 
+<<<<<<< HEAD
 ### Archive Directory (`logs/archive/`)
 Contains **all previous logs**:
 ```
 logs/archive/
+=======
+### Archive Directory (`6_Logs/archive/`)
+Contains **all previous logs**:
+```
+6_Logs/archive/
+>>>>>>> f768fb8fdde1d21e67ddf252f332a1c78b3ea398
 ├── 01_Cohort_20251027_120000.log          # Previous run
 ├── 01_Cohort_20251027_130000.log          # Previous run
 ├── 02_Attrition_20251027_125500.log       # Previous run
