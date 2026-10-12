@@ -1,0 +1,10 @@
+Running invariants ...
+Test passed with 8 successes 🎉.
+Test passed with 2 successes 😸.
+Test passed with 2 successes 😀.
+Test passed with 2 successes 🌈.
+Test passed with 1 success 🌈.
+Test passed with 2 successes 😸.
+Test passed with 2 successes 🌈.
+Error: '\(' is an unrecognized escape in character string (<input>:12:74)
+Execution halted

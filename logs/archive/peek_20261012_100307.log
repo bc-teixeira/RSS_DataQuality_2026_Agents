@@ -1,0 +1,79 @@
+
+   Black Hispanic    Other    White 
+       3        4       13       52 
+
+     Medicaid      Medicare Other/Unknown 
+            6            24            42 
+
+  CCU  MICU  NICU Other  SICU TSICU 
+    6    13     1    27    17     8 
+
+    Cardiac Vascular Intensive Care Unit (CVICU) 
+                                              20 
+                        Coronary Care Unit (CCU) 
+                                               6 
+              Medical Intensive Care Unit (MICU) 
+                                              13 
+Medical/Surgical Intensive Care Unit (MICU/SICU) 
+                                               7 
+ Neuro Surgical Intensive Care Unit (Neuro SICU) 
+                                               1 
+             Surgical Intensive Care Unit (SICU) 
+                                              17 
+                             Trauma SICU (TSICU) 
+                                               8 
+
+ F  M 
+28 44 
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+  11.56   29.15   49.18   87.01  118.28  492.69 
+[1] 8
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+     21      48      60      60      70      91 
+
+        BLACK/AFRICAN AMERICAN             BLACK/CAPE VERDEAN 
+                             2                              1 
+            HISPANIC OR LATINO HISPANIC/LATINO - PUERTO RICAN 
+                             1                              1 
+  HISPANIC/LATINO - SALVADORAN                          OTHER 
+                             2                              3 
+              UNABLE TO OBTAIN                        UNKNOWN 
+                             2                              8 
+                         WHITE              WHITE - BRAZILIAN 
+                            50                              1 
+        WHITE - OTHER EUROPEAN 
+                             1 
+# A tibble: 31 × 5
+   concept          valid   raw  impl  unit
+   <chr>            <int> <int> <int> <int>
+ 1 albumin             20    20     0     0
+ 2 alt                 29    29     0     0
+ 3 ast                 29    29     1     0
+ 4 bicarbonate         72    72     0     0
+ 5 bilirubin           29    29     0     0
+ 6 bun                 72    72     0     0
+ 7 chloride            72    72     0     0
+ 8 creatinine          72    72     0     0
+ 9 elixhauser_count    72    72     0     0
+10 gcs_total           72    72     0     0
+11 glucose             72    72     0     0
+12 heart_rate          72    72     0     0
+13 hematocrit          71    71     0     0
+14 hemoglobin          71    71     0     0
+15 inr                 62    62     0     0
+16 lactate             41    41     0     0
+17 map                 72    72     3     0
+18 paco2               43    43     0     0
+19 pao2                43    43     0     0
+20 ph                  44    44     0     0
+21 platelets           70    71     0     0
+22 potassium           72    72     0     0
+23 ptt                 62    62     0     0
+24 resp_rate           72    72     0     0
+25 sbp                 72    72     0     0
+26 sodium              72    72     0     0
+27 spo2                72    72     0     0
+28 temperature         70    70     0     0
+29 troponin             9    20     0    40
+30 urine_output        72    72     0     0
+31 wbc                 71    71     0     0

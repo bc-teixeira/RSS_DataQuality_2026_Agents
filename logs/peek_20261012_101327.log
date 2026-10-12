@@ -1,0 +1,51 @@
+             x          y       phi
+36  hematocrit hemoglobin 1.0000000
+83  hemoglobin        wbc 1.0000000
+84  hematocrit        wbc 1.0000000
+104      paco2       pao2 1.0000000
+170        alt        ast 1.0000000
+186        alt  bilirubin 1.0000000
+187        ast  bilirubin 1.0000000
+238        inr        ptt 1.0000000
+135       pao2         ph 0.9713772
+136      paco2         ph 0.9713772
+67  hemoglobin  platelets 0.7021095
+68  hematocrit  platelets 0.7021095
+85   platelets        wbc 0.7021095
+98     lactate       pao2 0.6584890
+       concept sex_F sex_M race_group_Other race_group_White insurance_group_Medicare insurance_group_Other/Unknown icu_type_MICU icu_type_Other icu_type_SICU
+1      albumin 78.57 68.18             61.5            71.15                    66.67                         71.43         30.77          81.48          82.4
+2          alt 50.00 65.91             46.2            63.46                    50.00                         64.29         38.46          74.07          58.8
+3          ast 50.00 65.91             46.2            63.46                    50.00                         64.29         38.46          74.07          58.8
+4    bilirubin 50.00 65.91             46.2            63.46                    50.00                         64.29         38.46          74.07          58.8
+5   hematocrit  0.00  2.27              0.0             1.92                     0.00                          2.38          7.69           0.00           0.0
+6   hemoglobin  0.00  2.27              0.0             1.92                     0.00                          2.38          7.69           0.00           0.0
+7          inr 10.71 15.91             23.1            13.46                    16.67                         11.90         15.38           7.41          23.5
+8      lactate 53.57 36.36             38.5            42.31                    37.50                         47.62         38.46          29.63          64.7
+9        paco2 50.00 34.09             38.5            40.38                    45.83                         40.48         46.15          37.04          47.1
+10        pao2 50.00 34.09             38.5            40.38                    45.83                         40.48         46.15          37.04          47.1
+11          ph 46.43 34.09             38.5            38.46                    45.83                         38.10         46.15          33.33          47.1
+12   platelets  3.57  2.27              0.0             3.85                     4.17                          2.38          7.69           0.00           0.0
+13         ptt 10.71 15.91             23.1            13.46                    16.67                         11.90         15.38           7.41          23.5
+14 temperature  3.57  2.27              0.0             1.92                     0.00                          2.38          0.00           3.70           0.0
+15    troponin 67.86 75.00             69.2            73.08                    62.50                         76.19         53.85          92.59          70.6
+16         wbc  0.00  2.27              0.0             1.92                     0.00                          2.38          7.69           0.00           0.0
+# A tibble: 15 × 4
+   level         variable        n_display shown
+   <chr>         <chr>           <chr>     <lgl>
+ 1 F             sex             28        TRUE 
+ 2 M             sex             44        TRUE 
+ 3 Black         race_group      <10       FALSE
+ 4 Hispanic      race_group      <10       FALSE
+ 5 Other         race_group      13        TRUE 
+ 6 White         race_group      52        TRUE 
+ 7 Medicaid      insurance_group <10       FALSE
+ 8 Medicare      insurance_group 24        TRUE 
+ 9 Other/Unknown insurance_group 42        TRUE 
+10 CCU           icu_type        <10       FALSE
+11 MICU          icu_type        13        TRUE 
+12 NICU          icu_type        <10       FALSE
+13 Other         icu_type        27        TRUE 
+14 SICU          icu_type        17        TRUE 
+15 TSICU         icu_type        <10       FALSE
+forcats: TRUE 

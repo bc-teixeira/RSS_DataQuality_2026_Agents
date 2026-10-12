@@ -1,0 +1,240 @@
+
+## tbl_attrition 
+  step                                                          criterion n_patients n_admissions n_icu_stays pct_patients_remaining n_patients_lost
+1    0         All TinyEHR patients (admissions / ICU stays as available)        100          275         140                    100               0
+2    1                                                    Age >= 18 years        100          275         140                    100               0
+3    2                            First hospital admission of the patient        100          100          80                    100               0
+4    3 First ICU stay in that admission (admission must have an ICU stay)         74           74          74                     74              26
+5    4                                      ICU length of stay >= 4 hours         72           72          72                     72               2
+6    5                            In-hospital mortality outcome available         72           72          72                     72               0
+
+## tbl_tiers 
+                                                 tier n_stays n_patients n_deaths mortality_pct
+1 1 Strict protocol (first admission, first ICU stay)      72         72        4           5.6
+2      2 First ICU stay of the patient, any admission      98         98       10          10.2
+3                 3 First ICU stay of every admission     126         98       14          11.1
+4                4 All ICU stays (no uniqueness rule)     137         99       18          13.1
+
+## tbl_integrity 
+        domain                                                                              check   n n_fail n_fail_display pct_fail status
+1   Relational                                                     Admissions linked to a patient 275      0              0      0.0   Pass
+2   Relational                                                   ICU stays linked to an admission 140      0              0      0.0   Pass
+3   Relational                                                      ICU stays linked to a patient 140      0              0      0.0   Pass
+4   Relational                                   ICU-stay patient matches its admission's patient 140      0              0      0.0   Pass
+5   Relational                   ICU stays traceable to a transfers row (stay_id = a transfer_id) 140      0              0      0.0   Pass
+6   Uniqueness                                                             Duplicate patient keys 100      0              0      0.0   Pass
+7   Uniqueness                                                           Duplicate admission keys 275      0              0      0.0   Pass
+8   Uniqueness                                                            Duplicate ICU stay keys 140      0              0      0.0   Pass
+9   Uniqueness                               Index ICU stays per patient > 1 in analytical cohort  72      0              0      0.0   Pass
+10    Temporal                                                      ICU outtime later than intime 140      0              0      0.0   Pass
+11    Temporal                     ICU LOS (days) agrees with outtime - intime (tolerance 0.01 d) 140      4            <10      2.9  Minor
+12    Temporal                                            Hospital discharge later than admission 275      0              0      0.0   Pass
+13    Temporal                                      ICU stay starts inside the admission interval 140      2            <10      1.4  Minor
+14    Temporal                                        ICU stay ends inside the admission interval 140     22             22     15.7  Issue
+15 Conformance                                        anchor_age within 18-91 (cap at 91 for >89) 100      0              0      0.0   Pass
+16 Conformance                           Age at ICU admission derivable and 18-120 (index cohort)  72      0              0      0.0   Pass
+17 Conformance                 Admission year within anchor_year_group +/- 3 years (shift sanity) 275     32             32     11.6  Issue
+18 Conformance                                                     hospital_expire_flag in {0, 1} 275      0              0      0.0   Pass
+19 Conformance                                                                   Gender in {F, M} 100      0              0      0.0   Pass
+20 Conformance                               Mortality flag = 1 has a deathtime (index admission)   4      0              0      0.0   Pass
+21 Conformance                              Mortality flag = 0 has no deathtime (index admission)  68      0              0      0.0   Pass
+22 Conformance                               Mortality flag agrees with discharge_location = DIED  72      0              0      0.0   Pass
+23 Conformance                     Date of death (dod) falls in the index admission when flag = 1   4      0              0      0.0   Pass
+24 Conformance                       Survivors without a date of death inside the index admission  68      0              0      0.0   Pass
+25 Consistency Race recorded identically across a patient's admissions (multi-admission patients)  48      4            <10      8.3  Issue
+
+## tbl_window_coverage 
+   n n_short pct_short median_los_h median_window_h n_under_12
+1 72       8      11.1     49.17819              24          1
+
+## tbl_urine_output 
+  n_stays n_with_record median_hours_covered_pct n_adequate pct_adequate median_first_record_h median_total_ml n_zero_total n_records n_negative n_missing_value n_non_ml
+1      72            72                     68.8         50         69.4                   1.8            1722            1      7286          0               0     7286
+
+## tbl_elixhauser 
+  n_categories_implemented n_adm_with_dx n_dx_rows n_dx_in_dict n_icd9 n_icd10 n_with_decimal pct_with_decimal pct_in_dict
+1                       31            72      1146         1146    785     361           1096             95.6         100
+
+## tbl_perfect_record 
+                          cde_set n_cde n_records n_perfect perfect_pct meets_97    ci_lo    ci_hi
+1           Index record (5 CDEs)     5        72        61    84.72222    FALSE 74.67750 91.24938
+2 Index + 7 vital signs (12 CDEs)    12        72        59    81.94444    FALSE 71.51944 89.13329
+3   Full analytical set (15 CDEs)    15        72        59    81.94444    FALSE 71.51944 89.13329
+
+## tbl_pareto 
+             cde                         error_type n_errors share_pct cum_share_pct n_display
+1           race                  Missing / unknown       10      76.9          76.9        10
+2    temperature Missing (no observation in window)        2      15.4          92.3       <10
+3 icu_timestamps            Inconsistent or invalid        1       7.7         100.0       <10
+
+## tbl_cde_error 
+                cde n_err err_pct
+1              race    10    13.9
+2       temperature     2     2.8
+3    icu_timestamps     1     1.4
+4               age     0     0.0
+5        creatinine     0     0.0
+6  elixhauser_count     0     0.0
+7         gcs_total     0     0.0
+8        heart_rate     0     0.0
+9               map     0     0.0
+10          outcome     0     0.0
+11        resp_rate     0     0.0
+12              sbp     0     0.0
+13              sex     0     0.0
+14             spo2     0     0.0
+15     urine_output     0     0.0
+
+## tbl_perfect_by_icu 
+  icu_type n_display perfect_pct       lo       hi shown
+1      CCU       <10          NA       NA       NA FALSE
+2     MICU        13    69.23077 42.36889 87.31950  TRUE
+3     NICU       <10          NA       NA       NA FALSE
+4    Other        27    85.18519 67.52094 94.08417  TRUE
+5     SICU        17    82.35294 58.97007 93.80899  TRUE
+6    TSICU       <10          NA       NA       NA FALSE
+
+## tbl_chi_feasibility 
+  n_testable n_with_gt20pct_cells_lt5 median_pct_cells_lt5 n_race_groups_gt0 n_race_groups_ge10 n_bonferroni_protocol
+1         16                       16                 62.5                 4                  2                    43
+
+## tbl_feasibility 
+                                            requirement                               protocol                 available                               verdict
+1                          Final analytical cohort size                       50,827 ICU stays                        72 Not comparable (0.14% of published N)
+2                           In-hospital deaths (events) Thousands (mortality-stratified split)                         4                            Inadequate
+3                    Events per predictor (43 clinical)                  >= 10 (rule of thumb)                      0.09                            Inadequate
+4                 Events per input (87 with indicators)                  >= 10 (rule of thumb)                      0.05                            Inadequate
+5                5-fold stratified CV needs >= 5 events                                5 folds                  4 events                          Not feasible
+6           70/15/15 split: deaths in validation + test                               Both > 0                     0 + 1        Not feasible (AUROC undefined)
+7                   Fairness subgroup >= 30 in test set                                n >= 30               test n = 11                          Not feasible
+8                       Race groups with >= 10 patients                               5 groups 2 of 4 present (1 absent) Inadequate for multinomial race model
+9  Group-conditional calibration (>= 50 validation obs)                                n >= 50         validation n = 10        All groups fall back to global
+10          Troponin 100% missing (excluded by authors)               100% missing in training        72.2% missing here       Not reproduced (data-dependent)
+11                   Association tests (43, Bonferroni)              43 tests, race (5 groups)    16 testable indicators        Sparse cells; descriptive only
+12                       External validation (eICU-CRD)                          eICU-CRD v2.0             Not available                          Out of scope
+
+## tbl_split 
+  split  n deaths n_display deaths_display
+1 train 51      3        51            <10
+2 valid 10      0        10              0
+3  test 11      1        11            <10
+
+## tbl_indicator_book 
+                                                                   item value
+1        Protocol: candidate features (20 vital + 22 lab + 2 composite)    44
+2                                   Protocol: indicators incl. troponin    44
+3 Distinct measurable concepts here (7 vitals + 22 labs + 2 composites)    31
+4                       Vital-sign domains behind the 20 vital features     7
+5        Concepts with constant missingness in this cohort (untestable)    15
+6                         Concepts with variable missingness (testable)    16
+
+## tbl_multisource 
+        concept itemid     unit n_obs share_pct
+1      chloride  50806    mEq/L    25      12.6
+2      chloride  50902    mEq/L   173      87.4
+3       glucose  50809    mg/dL   100      40.2
+4       glucose  50931    mg/dL   149      59.8
+5    hematocrit  50810        %    46      18.5
+6    hematocrit  51221        %   202      81.5
+7    hemoglobin  50811     g/dL    46      21.3
+8    hemoglobin  51222     g/dL   170      78.7
+9           map 220052     mmHg  1012      48.6
+10          map 220181     mmHg  1070      51.4
+11    potassium  50822    mEq/L    99      36.8
+12    potassium  50971    mEq/L   170      63.2
+13    resp_rate 220210 insp/min  2012      91.8
+14    resp_rate 224690 insp/min   180       8.2
+15          sbp 220050     mmHg  1013      48.7
+16          sbp 220179     mmHg  1067      51.3
+17       sodium  50824    mEq/L    38      18.1
+18       sodium  50983    mEq/L   172      81.9
+19  temperature 223761       °F   435      72.6
+20  temperature 223762       °C   164      27.4
+21     troponin  51003    ng/mL    25      38.5
+22     troponin 227429    ng/mL    40      61.5
+23 urine_output 226559       ml   988      92.0
+24 urine_output 226560       ml    86       8.0
+
+## tbl_group_sizes 
+           level        variable n_display shown
+1              F             sex        28  TRUE
+2              M             sex        44  TRUE
+3          Black      race_group       <10 FALSE
+4       Hispanic      race_group       <10 FALSE
+5          Other      race_group        13  TRUE
+6          White      race_group        52  TRUE
+7       Medicaid insurance_group       <10 FALSE
+8       Medicare insurance_group        24  TRUE
+9  Other/Unknown insurance_group        42  TRUE
+10           CCU        icu_type       <10 FALSE
+11          MICU        icu_type        13  TRUE
+12          NICU        icu_type       <10 FALSE
+13         Other        icu_type        27  TRUE
+14          SICU        icu_type        17  TRUE
+15         TSICU        icu_type       <10 FALSE
+
+## inventory
+            concept n_any_raw n_valid missing_pct obs_per_pt_median n_obs_implausible n_obs_value_missing n_agg_changed_by_filter n_pt_prewindow_gain min_raw  max_raw    units n_pre n_in n_post n_dup n_before_stay
+1           albumin        20      20   72.222222                20                 0                   0                       0                   0    1.80     4.50     g/dL    54   22    174     0             0
+2               alt        29      29   59.722222                29                 0                   0                       0                   0    7.00  8010.00     IU/L    74   44    397     0             0
+3               ast        29      29   59.722222                29                 1                   0                       1                   0    5.00 13060.00     IU/L    74   44    399     0             0
+4       bicarbonate        72      72    0.000000                72                 0                   0                       0                   0    8.00    46.00    mEq/L   144  161   1200     0             0
+5         bilirubin        29      29   59.722222                29                 0                   0                       0                   0    0.10    21.40    mg/dL    71   47    394     0             0
+6               bun        72      72    0.000000                72                 0                   0                       0                   0    6.00   154.00    mg/dL   157  161   1228     0             0
+7          chloride        72      72    0.000000                72                 0                   0                       0                   0   82.00   136.00    mEq/L   183  198   1259     0             0
+8        creatinine        72      72    0.000000                72                 0                   0                       0                   0    0.20    15.20    mg/dL   160  161   1238     0             0
+9  elixhauser_count        72      72    0.000000                72                 0                   0                       0                   0    0.00    11.00     <NA>    NA   NA     NA    NA            NA
+10        gcs_total        72      72    0.000000                72                 0                   0                       0                   0    3.00    15.00  (blank)    15 1670   3796     0            44
+11          glucose        72      72    0.000000                72                 0                   0                       0                   0   34.00   942.00    mg/dL   174  249   1204     0             0
+12       heart_rate        72      72    0.000000                72                 0                   0                       0                   0   29.00   160.00      bpm    25 2009   4805     0            69
+13       hematocrit        71      71    1.388889                71                 0                   0                       0                   0   13.00    43.80        %   194  248   1156     0             0
+14       hemoglobin        71      71    1.388889                71                 0                   0                       0                   0    3.90    14.90     g/dL   187  216   1101     0             0
+15              inr        62      62   13.888889                62                 0                   1                       0                   0    0.90     4.60  (blank)   105  133    523     0             0
+16          lactate        41      41   43.055556                41                 0                   0                       0                   0    0.70    13.20   mmol/L    53  134    245     0             0
+17              map        72      72    0.000000                72                 3                   0                       3                   0  -16.00   317.00     mmHg    18 2085   4735     1            54
+18            paco2        43      43   40.277778                43                 0                   0                       0                   0   24.00    94.00    mm Hg    64  206    303     0             0
+19             pao2        43      43   40.277778                43                 0                   0                       0                   0   26.00   594.00    mm Hg    64  206    303     0             0
+20               ph        44      44   38.888889                44                 0                   0                       0                   0    6.93     7.54    units    65  219    341     0             0
+21        platelets        71      70    2.777778                70                 0                   1                       0                   0   11.00   563.00     K/uL   150  174   1088     0             0
+22        potassium        72      72    0.000000                72                 0                   2                       0                   0    2.30     6.60    mEq/L   198  271   1316     0             0
+23              ptt        62      62   13.888889                62                 0                   1                       0                   0   21.00   150.00      sec   131  138    518     0             0
+24        resp_rate        72      72    0.000000                72                 0                   0                       0                   0    0.00    43.00 insp/min    38 2192   5429     1            88
+25              sbp        72      72    0.000000                72                 0                   0                       0                   0   52.00   203.00     mmHg    19 2080   4733     0            55
+26           sodium        72      72    0.000000                72                 0                   0                       0                   0  121.00   168.00    mEq/L   185  210   1285     0             0
+27             spo2        72      72    0.000000                72                 0                   0                       0                   0   77.00   100.00        %    25 1962   4698     4            65
+28      temperature        70      70    2.777778                70                 0                   0                       0                   0   31.30    40.40  °C / °F     9  599   1329     0            23
+29         troponin        20      20   72.222222                20                 0                  16                       0                   0    0.01     3.75    ng/mL    34   81    101     0             7
+30     urine_output        72      72    0.000000                72                 0                   0                       0                   0    0.00  1750.00       ml     3 1074   2864     2            14
+31              wbc        71      71    1.388889                71                 0                   0                       0                   0    3.20    62.40     K/uL   149  169   1078     0             0
+                   status
+1  Sparse (>=50% missing)
+2  Sparse (>=50% missing)
+3  Sparse (>=50% missing)
+4     Completely observed
+5  Sparse (>=50% missing)
+6     Completely observed
+7     Completely observed
+8     Completely observed
+9     Completely observed
+10    Completely observed
+11    Completely observed
+12    Completely observed
+13     Partially observed
+14     Partially observed
+15     Partially observed
+16     Partially observed
+17    Completely observed
+18     Partially observed
+19     Partially observed
+20     Partially observed
+21     Partially observed
+22    Completely observed
+23     Partially observed
+24    Completely observed
+25    Completely observed
+26    Completely observed
+27    Completely observed
+28     Partially observed
+29 Sparse (>=50% missing)
+30    Completely observed
+31     Partially observed

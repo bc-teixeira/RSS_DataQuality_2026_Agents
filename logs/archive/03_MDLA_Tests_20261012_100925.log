@@ -1,0 +1,25 @@
+Running invariants ...
+Test passed with 8 successes 🎊.
+Test passed with 2 successes 🥇.
+Test passed with 2 successes 🎊.
+Test passed with 2 successes 🌈.
+Test passed with 1 success 🎉.
+Test passed with 2 successes 🎉.
+Test passed with 2 successes 😸.
+── Failure: small-cell suppression: no displayed count of 1-9 in report tables ──
+Expected `all(as.integer(cnt) >= small_cell | as.integer(cnt) == 0)` to be TRUE.
+Differences:
+`actual`:   <NA>
+`expected`: TRUE
+
+Error:
+! Test failed with 1 failure and 4 successes.
+Backtrace:
+    ▆
+ 1. └─testthat::test_that(...)
+ 2.   └─testthat:::test_code(code, parent.frame())
+ 3.     ├─withr (local) `<fn>`()
+ 4.     └─reporter$end_test(context = reporter$.context, test = test)
+ 5.       └─cli::cli_abort(...)
+ 6.         └─rlang::abort(...)
+Execution halted

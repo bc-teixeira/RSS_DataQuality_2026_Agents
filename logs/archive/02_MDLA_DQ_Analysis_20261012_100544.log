@@ -1,0 +1,38 @@
+Step 1: Loading stage outputs ...
+  -> cohort: 72; features_long rows: 2232; obs: 16046
+Step 2: Cohort tables ...
+  -> saved tbl_baseline.rds
+  -> saved tbl_attrition.rds
+  -> saved tbl_tiers.rds
+Step 3: Feature inventory ...
+  -> saved tbl_inventory.rds
+  -> saved obs_values.rds
+  -> saved tbl_units.rds
+  -> saved tbl_multisource.rds
+Step 4: Conformance / relational / temporal / uniqueness ...
+  -> saved tbl_integrity.rds
+  -> saved tbl_temporal.rds
+  -> saved tbl_window_coverage.rds
+  -> saved tbl_urine_output.rds
+  -> saved tbl_elixhauser.rds
+  -> saved tbl_gcs.rds
+Step 5: Perfect-record scoring ...
+  -> saved tbl_perfect_record.rds
+  -> saved tbl_pareto.rds
+  -> saved tbl_cde_error.rds
+  -> Perfect-record (full set): 81.9%
+  -> saved tbl_perfect_by_icu.rds
+Step 6: Missingness audit ...
+  -> saved tbl_miss_overall.rds
+  -> saved tbl_miss_subgroup.rds
+  -> saved tbl_group_sizes.rds
+  -> saved tbl_miss_phi.rds
+  -> saved tbl_miss_constant.rds
+  -> saved tbl_indicator_book.rds
+  -> saved tbl_chi_feasibility.rds
+Step 7: Feasibility of the MDLA workflow ...
+  -> saved tbl_feasibility.rds
+  -> saved tbl_split.rds
+Step 8: Headline numbers ...
+  -> saved headline.rds
+Done.

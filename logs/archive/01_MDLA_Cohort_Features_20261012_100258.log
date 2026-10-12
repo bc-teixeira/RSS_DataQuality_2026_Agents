@@ -1,0 +1,17 @@
+Step 1: Loading core tables ...
+  -> patients: 100; admissions: 275; ICU stays: 140
+  -> Mapping rows: 74; found in dictionary: 74
+Step 2: Building cohort ...
+  -> Attrition (patients): 100 -> 100 -> 100 -> 74 -> 72 -> 72
+  -> Final analytical cohort: 72 ICU stays / 72 patients; deaths: 4
+Step 3: Extracting observations from chartevents / outputevents / labevents ...
+  -> chartevents rows for mapped items: 84153
+  -> outputevents rows: 9362; urine items: 7286
+  -> labevents rows for mapped items: 43839
+  -> GCS charttimes: 559 (complete triplets: 553)
+  -> Observations in window: 16046; unit mismatch: 40; implausible (unit ok): 25
+Step 4: Elixhauser count from diagnoses_icd ...
+  -> Index-admission diagnoses: 1146; matched to dictionary: 1146
+  -> Elixhauser categories: 31; admissions with diagnoses: 72
+Step 5: Saving artifacts ...
+Done. Cohort 72 stays; features_long 2232 rows.

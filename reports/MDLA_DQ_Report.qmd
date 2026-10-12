@@ -1,0 +1,705 @@
+---
+title: "Data Quality Control Report: TinyEHR for the MDLA Critical-Care Mortality Protocol"
+subtitle: "Is this dataset fit to reproduce Patel and Beedala (medRxiv 2026)?"
+author: "Prepared with the data-quality-evaluation and tinyehr-context skills"
+date: today
+date-format: "YYYY-MM-DD"
+format:
+  html:
+    embed-resources: true
+    code-fold: true
+    code-summary: "Show the code"
+    toc: true
+    toc-depth: 2
+    theme: cosmo
+number-sections: true
+execute:
+  warning: false
+  message: false
+  echo: false
+---
+
+```{r}
+#| label: setup
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+  library(stringr)
+  library(ggplot2)
+  library(gt)
+  library(gtsummary)
+})
+
+dir_out <- "reports/outputs"
+if (!dir.exists(dir_out)) dir_out <- "outputs"   # when rendered from reports/
+r <- function(n) readRDS(file.path(dir_out, paste0(n, ".rds")))
+
+small_cell <- 10
+sup <- function(n, thr = small_cell) ifelse(n > 0 & n < thr, paste0("<", thr), format(n, trim = TRUE, big.mark = ","))
+
+# BMS palette (r-coding skill). Pastels are used only for fills behind dark text.
+bms <- list(purple = "#BE2BBB", dark_gray = "#595959", gray = "#A6A69F", light_gray = "#EEE7E7",
+            amber = "#FFECCD", peach = "#FCDCCA", mint = "#C5FFE6", aqua = "#C0F2FB", sienna = "#DAC5C5")
+bms_palette <- c(bms$purple, bms$dark_gray, bms$gray, bms$peach, bms$mint, bms$aqua, bms$sienna, bms$amber)
+theme_bms <- function(base_size = 11) {
+  theme_minimal(base_size = base_size) +
+    theme(panel.grid.minor = element_blank(), plot.title.position = "plot",
+          plot.title = element_text(face = "bold", colour = bms$dark_gray),
+          strip.text = element_text(face = "bold", colour = bms$dark_gray),
+          axis.text = element_text(colour = bms$dark_gray), legend.position = "bottom")
+}
+bms_gt <- function(df, title = NULL, subtitle = NULL) {
+  gt(df) |>
+    tab_header(title = title, subtitle = subtitle) |>
+    sub_missing(missing_text = "-") |>
+    tab_options(table.font.size = px(12), heading.align = "left",
+                column_labels.background.color = bms$purple, column_labels.font.weight = "bold",
+                table.border.top.color = bms$purple, data_row.padding = px(3)) |>
+    tab_style(style = cell_text(color = "white", weight = "bold"), locations = cells_column_labels())
+}
+status_fill <- function(x) dplyr::case_when(x %in% c("Pass", "Completely observed", "Feasible") ~ bms$mint,
+                                            x %in% c("Minor", "Partially observed", "Marginal") ~ bms$amber,
+                                            TRUE ~ bms$peach)
+
+attrition <- r("tbl_attrition"); tiers <- r("tbl_tiers"); inv <- r("tbl_inventory")
+integ <- r("tbl_integrity"); temporal <- r("tbl_temporal"); perfect <- r("tbl_perfect_record")
+pareto <- r("tbl_pareto"); cde_err <- r("tbl_cde_error"); by_icu <- r("tbl_perfect_by_icu")
+miss_overall <- r("tbl_miss_overall"); miss_sub <- r("tbl_miss_subgroup"); gsz <- r("tbl_group_sizes")
+phi <- r("tbl_miss_phi"); const <- r("tbl_miss_constant"); ibook <- r("tbl_indicator_book")
+feas <- r("tbl_feasibility"); split <- r("tbl_split"); chi <- r("tbl_chi_feasibility")
+uo <- r("tbl_urine_output"); elix <- r("tbl_elixhauser"); wcov <- r("tbl_window_coverage")
+units_tbl <- r("tbl_units"); multi <- r("tbl_multisource"); gcs <- r("tbl_gcs"); overrun <- r("tbl_icu_overrun")
+obs_values <- r("obs_values"); hl <- r("headline")
+
+pf <- perfect |> filter(str_detect(cde_set, "^Full analytical"))
+pf_norace <- perfect |> filter(str_detect(cde_set, "excluding race"))
+n_coh <- hl$n_cohort
+n_final_pct <- attrition$pct_patients_remaining[nrow(attrition)]
+fmt1 <- function(x) sprintf("%.1f", x)
+```
+
+# Verdict {.unnumbered}
+
+```{r}
+#| label: verdict-box
+#| results: asis
+cat(sprintf(
+'::: {.callout-important appearance="simple"}
+**Fit with caveats for a protocol-aware data-quality demonstration (Stages A to D). Not fit for reproducing the MDLA model, fairness or calibration estimates.**
+
+The analytical cohort has **%d patients** (%s%% of the 100 TinyEHR patients, against 50,827 ICU stays in the published study) and **%s in-hospital deaths**.
+The perfect-record score over the 15 critical data elements is **%s%%** (95%% CI %s to %s) against a 97%% bar; it rises to **%s%%** (CI %s to %s) once race, the single largest defect, is set aside.
+Cohort construction, the first-24-hour feature inventory, the data-quality checks and the missingness audit can all be executed and are informative. The prediction, 5-fold cross-validation, subgroup fairness (n >= 30) and group calibration (n >= 50) stages cannot be carried out with any validity.
+:::',
+n_coh, fmt1(n_final_pct), hl$deaths_display,
+fmt1(pf$perfect_pct), fmt1(pf$ci_lo), fmt1(pf$ci_hi),
+fmt1(pf_norace$perfect_pct), fmt1(pf_norace$ci_lo), fmt1(pf_norace$ci_hi)))
+```
+
+| Question (Redman and Hoerl) | Answer |
+|:--|:--|
+| **Right data?** (does this data bear on the protocol) | Partly. The schema, item types, first-24-hour structure and missingness patterns reproduce faithfully. The sample size, event count, subgroup sizes and one protocol premise (troponin 100% missing) do not. |
+| **Data are right?** (are the values accurate and complete) | Largely yes for the physiology and linkage; the defects are concentrated in race recording, ICU-stay end times and a handful of implausible or missing readings. No accuracy reference exists, so accuracy is **unmeasured**, not assumed. |
+| **Triage** | *Fit with stated caveats* for the demonstration; *not fit* for statistical reproduction. |
+
+&nbsp;
+
+# Intended use and data customer
+
+**Decision supported.** Decide whether TinyEHR can be used to reproduce the MDLA study workflow (protocol `protocol/MDLA_MIMIC_IV_Reproduction_Protocol.md`) and which parts of the protocol are or are not reproducible. The protocol itself (section 25) frames the preferred question as: *can an agent correctly determine whether this dataset is fit to reproduce the study, identify the data-quality risks, execute the checks and explain what is and is not reproducible?*
+
+**Data customer.** The researcher or conference audience who will rely on the demonstration (RSS data quality conference, Edinburgh, 22 October 2026). Their definition of "error" is taken from the protocol sections 5, 11 and 22.
+
+**Critical data elements (15).** The perfect-record score is computed over exactly these.
+
+```{r}
+#| label: cde-table
+tibble::tribble(
+  ~Group, ~`Critical data element`, ~`Operational definition of an error`,
+  "Index", "Age at ICU admission", "Not derivable, <18 or >120 years",
+  "Index", "Sex", "Not F or M",
+  "Index", "Race", "Missing, UNKNOWN, UNABLE TO OBTAIN or PATIENT DECLINED",
+  "Index", "In-hospital mortality", "Flag disagrees with deathtime or discharge location DIED",
+  "Index", "ICU timestamps", "Outtime <= intime, or intime outside the admission interval",
+  "Physiology", "Heart rate, SBP, MAP, respiratory rate, SpO2, temperature, GCS total", "No valid observation (present, unit-correct, plausible) in the first 24 h",
+  "Physiology", "Creatinine", "No valid observation in the first 24 h",
+  "Composite", "Urine output (24 h)", "No valid output record in the first 24 h",
+  "Composite", "Elixhauser comorbidity count", "No diagnosis codes for the index admission"
+) |>
+  bms_gt()
+```
+
+**Acceptance standard.** Redman's loosest bar of 97% perfect records. A research reproduction would normally ask for more, an exploratory demonstration for less; the bar is stated so the reader can move it.
+
+&nbsp;
+
+# Data pedigree
+
+Pedigree answers come from the `tinyehr-context` skill (section 1 of `Database_Context.md`); anything the documentation leaves open is listed as an unknown and carried into the limitations.
+
+```{r}
+#| label: pedigree
+tibble::tribble(
+  ~Question, ~Answer, ~`Source (Database_Context section)`,
+  "Origin and purpose", "Routine care, monitoring and billing at BIDMC (MIMIC-IV). TinyEHR was built for teaching, prototyping and agent experiments, explicitly not for clinical analysis.", "1",
+  "Population", "100 patients from the MIMIC-IV Clinical Database Demo v2.2; single US academic centre; selection rule for the 100 patients not documented.", "1, 8 (Q1)",
+  "Recording process", "Nurses chart ICU observations (hour-block `charttime`, validation `storetime`); laboratory `charttime` is specimen collection; trained coders assign ICD codes after discharge.", "1, 5 (L16)",
+  "Transformations", "Per-patient date shift, ICD decimal formatting, 4,580 LLM-generated notes added. Values otherwise identical to the MIMIC-IV Demo.", "1, 5 (L8, L14)",
+  "Time coverage", "Source 2008 to 2019, dates shifted to the 2010s and 2020s; calendar year and season are not real, intervals within a patient are preserved.", "1, 5 (L8)",
+  "Access and licence", "ODbL-1.0, no credentialing required.", "1",
+  "**Unknown**", "Which `date_offsets.csv` columns exist; whether `anchor_year` was shifted (this report finds admission dates coherent with it); eMAR rollout period; documented value lists for race, insurance and care units.", "8 (Q2 to Q9)"
+) |>
+  mutate(Answer = md(Answer), Question = md(Question)) |>
+  bms_gt()
+```
+
+`anchor_age` is capped at **91** in the data (maximum observed in the cohort is 91 years; no value of 300 occurs), which resolves open question Q7 in favour of the `patients` table documentation.
+
+&nbsp;
+
+# Stage A: cohort construction
+
+## Attrition
+
+```{r}
+#| label: attrition-table
+attrition |>
+  transmute(Step = step, Criterion = criterion,
+            Patients = n_patients, Admissions = n_admissions, `ICU stays` = n_icu_stays,
+            `Patients lost` = n_patients_lost, `% of patients remaining` = pct_patients_remaining) |>
+  bms_gt("Cohort attrition", "Protocol order, section 22 Stage A; unit shown as patients, admissions and ICU stays") |>
+  tab_footnote("Admissions and ICU stays after step 2 are those of each patient's first hospital admission. ICU stays in earlier rows are all ICU stays belonging to the admissions that remain.")
+```
+
+```{r}
+#| label: attrition-plot
+#| fig-height: 3.2
+attrition |>
+  mutate(label = factor(paste0(step, ". ", stringr::str_wrap(criterion, 38)), levels = rev(paste0(step, ". ", stringr::str_wrap(criterion, 38))))) |>
+  ggplot(aes(n_patients, label)) +
+  geom_col(fill = bms$purple, width = 0.65) +
+  geom_text(aes(label = n_patients), hjust = -0.2, colour = bms$dark_gray, size = 3.5) +
+  scale_x_continuous(expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Patients remaining at each step", x = "Patients", y = NULL) +
+  theme_bms()
+```
+
+**The dominant loss is step 3, not the protocol criteria that look strict.** Of 100 patients, 26 lose their place because their *first* hospital admission has no ICU stay: the protocol hierarchy (patient, first admission, first ICU stay in that admission) discards a patient whose ICU stay occurs in a later admission. This is a faithful application of the protocol rather than an error, but it is a definition choice that moves the cohort, and the next section shows by how much.
+
+## Sensitivity to the cohort definition (tiered definitions)
+
+```{r}
+#| label: tiers
+tiers |>
+  transmute(`Cohort definition` = tier, `ICU stays` = n_stays, Patients = n_patients,
+            Deaths = n_deaths_display, `In-hospital mortality` = mortality_display) |>
+  bms_gt("Headline cohort under four definitions", "Tate's tiered-definition sensitivity; Tier 1 is the protocol")
+```
+
+Relaxing the "first admission" rule enlarges the cohort by more than a third and moves the death count from fewer than 10 to 10 or more, because deaths are more frequent among the patients added. **The answer to "how many deaths are available" depends on a definition the data cannot settle.** Tier 1 is used throughout because it is the protocol.
+
+## Baseline characteristics
+
+```{r}
+#| label: baseline
+r("tbl_baseline") |> as_gt() |> tab_options(table.font.size = px(12))
+```
+
+Two harmonisation findings matter for the MDLA subgroup analyses. First, **no Asian patient** is present. Second, the protocol's six ICU types (MICU, SICU, CCU, NICU, TSICU, Other) cannot absorb TinyEHR's care units: the cardiac-vascular ICU (CVICU) and the medical/surgical ICU have no protocol category, and the neuro step-down unit is not an ICU in the usual sense but is listed in `icustays`. The residual group "Other" is therefore the **largest** ICU type, which defeats its purpose as a small catch-all.
+
+&nbsp;
+
+# Stage B: first-24-hour feature inventory
+
+## Variable-to-database mapping
+
+The protocol gives no item identifiers (its section 27 says to take them from the authors' code). The mapping below is therefore an analyst mapping, checked against `d_items` and `d_labitems`: all mapped identifiers exist in the dictionaries. Seven vital-sign domains, 22 laboratory concepts, urine output and the Elixhauser count give **31 measurable concepts**; the protocol counts 44 candidate features.
+
+```{r}
+#| label: mapping
+inv |>
+  arrange(factor(group, c("Vital", "Laboratory", "Composite"))) |>
+  transmute(Group = group, Concept = concept, `Source table` = source,
+            `Item IDs mapped` = itemids, `Plausibility limit` = ifelse(is.na(lo), "n/a", paste0(lo, " to ", hi)),
+            `Limit origin` = limit_origin, `Used in final 43` = ifelse(in_final_43, "Yes", "No (troponin)")) |>
+  bms_gt("Variable-to-database mapping", "Limits other than creatinine and pH are analyst assumptions") |>
+  tab_footnote("GCS total is derived as eye + verbal + motor charted at the same time; its limit applies to the total (3 to 15).")
+```
+
+## Completeness, units and plausibility per feature
+
+```{r}
+#| label: inventory
+inv |>
+  arrange(factor(group, c("Vital", "Laboratory", "Composite")), missing_pct) |>
+  transmute(
+    Concept = concept,
+    `Patients with a valid value` = sup(n_valid),
+    `Missing (%)` = round(missing_pct, 1),
+    `Valid obs per patient, median (Q1-Q3)` = paste0(round(obs_per_pt_median, 1), " (", round(obs_per_pt_q1, 1), "-", round(obs_per_pt_q3, 1), ")"),
+    Units = units,
+    `Observed min` = round(min_raw, 2), `Observed max` = round(max_raw, 2),
+    `Implausible obs` = sup(n_obs_implausible),
+    `Non-numeric obs` = sup(n_obs_value_missing),
+    Status = status
+  ) |>
+  bms_gt("Per-feature completeness, plausibility and units", "Counts of 1 to 9 are suppressed; observed min and max are before plausibility filtering") |>
+  tab_style(style = list(cell_fill(color = bms$mint)), locations = cells_body(columns = Status, rows = Status == "Completely observed")) |>
+  tab_style(style = list(cell_fill(color = bms$amber)), locations = cells_body(columns = Status, rows = Status == "Partially observed")) |>
+  tab_style(style = list(cell_fill(color = bms$peach)), locations = cells_body(columns = Status, rows = Status == "Sparse (>=50% missing)")) |>
+  tab_footnote("Elixhauser count: observed min and max are the count of comorbidity categories.")
+```
+
+```{r}
+#| label: completeness-plot
+#| fig-height: 6.5
+inv |>
+  mutate(concept = forcats::fct_reorder(concept, missing_pct)) |>
+  ggplot(aes(100 - missing_pct, concept, fill = group)) +
+  geom_col(width = 0.7) +
+  geom_vline(xintercept = 97, linetype = "dashed", colour = bms$dark_gray) +
+  scale_fill_manual(values = c(Vital = bms$purple, Laboratory = bms$dark_gray, Composite = bms$gray), name = NULL) +
+  scale_x_continuous(limits = c(0, 100), expand = expansion(mult = c(0, 0.02))) +
+  labs(title = "Share of the cohort with at least one valid value in the first 24 hours",
+       subtitle = "Dashed line marks the 97% acceptance bar", x = "Patients with a valid value (%)", y = NULL) +
+  theme_bms()
+```
+
+```{r}
+#| label: dist-plot
+#| fig-height: 9
+lims <- inv |> filter(!is.na(lo)) |> select(concept, lo, hi)
+obs_values |>
+  left_join(lims, by = "concept") |>
+  ggplot(aes(value_std, fill = plausible)) +
+  geom_histogram(bins = 30) +
+  geom_vline(aes(xintercept = lo), colour = bms$dark_gray, linetype = "dashed", na.rm = TRUE) +
+  geom_vline(aes(xintercept = hi), colour = bms$dark_gray, linetype = "dashed", na.rm = TRUE) +
+  facet_wrap(~concept, scales = "free", ncol = 5) +
+  scale_fill_manual(values = c(`TRUE` = bms$purple, `FALSE` = bms$dark_gray), labels = c(`TRUE` = "Plausible", `FALSE` = "Removed"), name = NULL) +
+  labs(title = "Distribution of valid-unit observations in the first 24 hours", x = NULL, y = "Observations") +
+  theme_bms(9) + theme(axis.text.y = element_blank())
+```
+
+**What the initial data analysis shows.**
+
+```{r}
+#| label: ida-numbers
+n_vit_complete <- sum(inv$group == "Vital" & inv$status == "Completely observed")
+absent <- inv |> filter(status == "Completely absent") |> pull(concept)
+sparse <- inv |> filter(status == "Sparse (>=50% missing)") |> pull(concept)
+lact <- inv |> filter(concept == "lactate"); trop <- inv |> filter(concept == "troponin")
+tmp <- multi |> filter(concept == "temperature")
+f_share <- tmp$share_pct[str_detect(tmp$unit, "F$")]
+asat <- inv |> filter(concept == "ast")
+mp <- inv |> filter(concept == "map")
+```
+
+* **Vital signs are essentially complete**: `r n_vit_complete` of 7 vital-sign domains are observed for every patient (the exception is temperature). Laboratory completeness splits into routine chemistry and haematology (observed for 97 to 100% of patients), coagulation (86%), blood gases and lactate (about 57 to 61%), and liver tests, albumin and troponin (28 to 40% observed).
+* **Nothing is completely absent**: the protocol's premise that troponin is 100% missing is **not reproduced**; troponin is missing for `r fmt1(trop$missing_pct)`% of this cohort. `r sup(trop$n_obs_value_missing)` troponin results are non-numeric (below-detection style text, `valuenum` empty). Troponin remains in the missingness audit, as the protocol requires.
+* **Two source codes with different units carry the same concept.** `r fmt1(f_share)`% of valid temperature readings come from the Fahrenheit item and the rest from the Celsius item. A pipeline that skips the unit-harmonisation step would silently classify most temperatures as implausible. The same duplicate-code pattern affects blood pressures, respiratory rate, five laboratory concepts and troponin (see the unit section below).
+* **Extreme values are real and drive min and max.** Observed AST reaches `r format(asat$max_raw, big.mark = ",")` IU/L and ALT is similar; our assumed upper limit of 10,000 removes a physiologically possible shock-liver value. Mean arterial pressure shows `r sup(mp$n_obs_implausible)` impossible readings (minimum `r mp$min_raw` mmHg) that would have set a patient's minimum had the filter been skipped. Plausibility limits must come from the authors' code; this report's limits are assumptions.
+
+&nbsp;
+
+# Stage C: data-quality assessment by domain
+
+## Conformance, relational integrity, temporal integrity and uniqueness
+
+```{r}
+#| label: integrity
+integ |>
+  transmute(Domain = domain, Check = check, `Records checked` = n,
+            Failures = n_fail_display, `Failure (%)` = pct_fail, Status = status) |>
+  bms_gt("Rule-based checks on the raw core tables", "Pass = 0 failures; Minor = under 3%; Issue = 3% or more") |>
+  tab_style(style = cell_fill(color = bms$mint), locations = cells_body(columns = Status, rows = Status == "Pass")) |>
+  tab_style(style = cell_fill(color = bms$amber), locations = cells_body(columns = Status, rows = Status == "Minor")) |>
+  tab_style(style = cell_fill(color = bms$peach), locations = cells_body(columns = Status, rows = Status == "Issue"))
+```
+
+```{r}
+#| label: integrity-notes
+ov <- overrun
+```
+
+* **Keys, linkage and uniqueness are clean**: every admission links to a patient, every ICU stay to an admission and to a transfer row, and no key is duplicated. Each analytical patient contributes exactly one ICU stay.
+* **Mortality is defined consistently at the admission level** (protocol question 5): the flag, `deathtime`, discharge location and date of death all agree for the index admissions.
+* **ICU stay end times exceed hospital discharge for `r ov$n` of 140 ICU stays** (median overshoot `r round(ov$median_h, 1)` hours, maximum `r round(ov$max_h, 1)` hours). The stay and the admission are produced by different systems (`icustays` is derived from transfers), so the two clocks disagree. This does not move the first-24-hour window but it is a relational-timing defect worth reporting to the data owner.
+* **`los` does not always equal outtime minus intime** for a few stays, so the protocol's four-hour rule is evaluated here from the timestamps, not from the `los` column.
+* **Race is recorded inconsistently for a small number of patients** across their own admissions, evidence that race is an administrative field captured at each registration rather than a validated attribute.
+
+## Temporal integrity of the first-24-hour window
+
+The protocol states the 24-hour restriction is an important fitness-for-purpose rule and "should be explicitly validated".
+
+```{r}
+#| label: temporal
+temporal |>
+  arrange(factor(group, c("Vital", "Laboratory", "Composite")), concept) |>
+  transmute(Concept = concept,
+            `Events in cohort` = sup(n_events_cohort),
+            `Before ICU admission` = sup(n_pre),
+            `In window` = sup(n_in),
+            `After window` = sup(n_post),
+            `In window (%)` = pct_in_window,
+            `Duplicate events` = sup(n_dup),
+            `Charted before stay start` = sup(n_before_stay)) |>
+  bms_gt("Events relative to the index ICU stay", "Laboratory events are counted within the index admission; ICU events are those linked to the index stay_id") |>
+  tab_footnote("Events before ICU admission or after the window are excluded from predictor derivation, as the protocol requires. 'Charted before stay start' are stay-linked ICU events dated before the stay's intime.")
+```
+
+* **Only a minority of events fall in the window** (roughly 27 to 31% for ICU chart items), because most of the stay lies beyond 24 hours. The window filter is therefore doing real work: omitting it would let later, outcome-correlated measurements leak into predictors.
+* **Stay-linked ICU events dated before ICU admission exist** (tens of events per vital sign), a temporal-integrity defect. They are excluded by the window filter but show that `stay_id` linkage is not a sufficient proxy for time.
+* **Laboratory values from the 24 hours before ICU admission** exist for several patients who have no in-window value (see the inventory data), so the strict window forfeits some pre-ICU evidence. Whether that is desirable is a protocol choice, not a data defect.
+
+```{r}
+#| label: window-cov
+bind_cols(
+  tibble(`ICU stays in cohort` = wcov$n),
+  tibble(`ICU LOS < 24 h` = sup(wcov$n_short), `Share (%)` = wcov$pct_short,
+         `Median ICU LOS (h)` = round(wcov$median_los_h, 1), `Median window available (h)` = wcov$median_window_h)
+) |>
+  bms_gt("Window coverage", "Stays shorter than 24 h only offer a truncated observation window")
+```
+
+## Units, source codes and urine output
+
+```{r}
+#| label: multisource
+multi |>
+  group_by(concept) |>
+  summarise(`Source codes (item ID, unit): share of valid observations` =
+              paste0(itemid, " [", unit, "] ", share_pct, "%", collapse = "; "), .groups = "drop") |>
+  rename(Concept = concept) |>
+  bms_gt("Concepts fed by more than one source code (protocol question 7)", "Unit strings are consistent within each concept except temperature (Celsius versus Fahrenheit)")
+```
+
+```{r}
+#| label: uo
+tibble::tribble(
+  ~Check, ~Result,
+  "Stays with at least one urine-output record in the window", paste0(uo$n_with_record, " of ", uo$n_stays),
+  "Median share of available hours with a record (%)", as.character(uo$median_hours_covered_pct),
+  "Stays with records in at least half of the available hours", paste0(uo$n_adequate, " of ", uo$n_stays, " (", uo$pct_adequate, "%)"),
+  "Median hours from ICU admission to first record", as.character(uo$median_first_record_h),
+  "Records with negative value / missing value / non-mL unit", paste(uo$n_negative, "/", uo$n_missing_value, "/", uo$n_non_ml),
+  "Stays whose 24 h total is exactly zero", sup(uo$n_zero_total),
+  "Median 24 h total (mL)", format(uo$median_total_ml, big.mark = ",")
+) |>
+  bms_gt("Urine output (protocol 10.1)", "Ten urine output items; adequate capture assumed at 50% of hours (analyst parameter)")
+```
+
+Every analytical patient has urine output recorded, with no negative, missing or non-mL values, but about **three in ten** stays have records in fewer than half of the available hours, so a "24-hour total" is a lower bound of unknown tightness for those stays. The exact urine-output derivation is one of the protocol items that must be verified against the authors' code.
+
+## Comorbidity (Elixhauser) reconstruction
+
+```{r}
+#| label: elix
+tibble::tribble(
+  ~Item, ~Value,
+  "Index admissions with diagnosis codes", paste0(elix$n_adm_with_dx, " of ", n_coh),
+  "Diagnosis rows", format(elix$n_dx_rows, big.mark = ","),
+  "ICD-9 / ICD-10 rows", paste0(format(elix$n_icd9, big.mark = ","), " / ", format(elix$n_icd10, big.mark = ",")),
+  "Rows matched to the TinyEHR dictionary (%)", as.character(elix$pct_in_dict),
+  "Rows with a decimal point in the code (%)", as.character(elix$pct_with_decimal),
+  "Elixhauser categories implemented (Quan, ICD-9 and ICD-10)", as.character(elix$n_categories_implemented)
+) |>
+  bms_gt("Can the Elixhauser count be reconstructed? (protocol question 18)")
+```
+
+Yes, with three caveats. TinyEHR inserts a decimal after the third character of ICD codes, so codes must be de-punctuated before applying published Elixhauser maps (limitation L7). Both ICD versions occur and need their own map. And `diagnoses_icd` holds **billing codes assigned after discharge**: using them as a predictor at 24 hours uses information that was not available at prediction time, so the Elixhauser predictor carries a latent timing leak that the protocol does not discuss.
+
+&nbsp;
+
+# Perfect-record score and error Pareto
+
+```{r}
+#| label: perfect
+perfect |>
+  transmute(`CDE set` = cde_set, CDEs = n_cde, Records = n_records, `Perfect records` = n_perfect,
+            `Perfect (%)` = round(perfect_pct, 1), `95% CI (Wilson)` = paste0(round(ci_lo, 1), " to ", round(ci_hi, 1)),
+            `Meets 97% bar` = ifelse(meets_97, "Yes", "No")) |>
+  bms_gt("Redman perfect-record score", "A record is perfect only if no critical data element has an error") |>
+  tab_style(style = cell_fill(color = bms$peach), locations = cells_body(columns = `Meets 97% bar`, rows = `Meets 97% bar` == "No"))
+```
+
+```{r}
+#| label: perfect-plot
+#| fig-height: 2.8
+perfect |>
+  mutate(cde_set = factor(cde_set, rev(cde_set))) |>
+  ggplot(aes(perfect_pct, cde_set)) +
+  geom_vline(xintercept = 97, linetype = "dashed", colour = bms$dark_gray) +
+  geom_linerange(aes(xmin = ci_lo, xmax = ci_hi), orientation = "y", linewidth = 1, colour = bms$dark_gray) +
+  geom_point(size = 3.2, colour = bms$purple) +
+  scale_x_continuous(limits = c(60, 100)) +
+  labs(title = "Perfect-record score with 95% interval", subtitle = "Dashed line: 97% bar", x = "Perfect records (%)", y = NULL) +
+  theme_bms()
+```
+
+```{r}
+#| label: pareto
+pareto |>
+  transmute(`Critical data element` = cde, `Error type` = error_type, Errors = n_display,
+            `Share of all errors (%)` = share_pct, `Cumulative (%)` = cum_share_pct) |>
+  bms_gt("Error Pareto", "Only three error types occur; counts of 1 to 9 suppressed")
+```
+
+**One defect carries three quarters of all errors: race recorded as missing or unknown** (UNKNOWN, UNABLE TO OBTAIN, PATIENT DECLINED), affecting about one patient in seven. The remaining errors are a missing temperature and one inconsistent ICU timestamp. Without race the perfect-record score is `r fmt1(pf_norace$perfect_pct)`%, still just under the bar. The sample is too small for the interval to exclude 97%.
+
+This is not a random error: race is an administrative registration field, and the MDLA study asks whether missing data encode demographic information. In a dataset where race itself is largely unknown for one patient in seven, the protocol's race analyses start from a compromised label. This is the *Proxy Trap* failure pattern: a field recorded for another purpose is used as a clinical or demographic truth.
+
+## Variation across units
+
+```{r}
+#| label: by-icu
+by_icu |>
+  transmute(`ICU type` = icu_type, Patients = n_display,
+            `Perfect (%)` = round(perfect_pct, 1),
+            `95% CI` = ifelse(is.na(lo), "suppressed (n < 10)", paste0(round(lo, 1), " to ", round(hi, 1)))) |>
+  bms_gt("Perfect-record score by harmonised ICU type", "Units with fewer than 10 patients are suppressed")
+```
+
+The three reportable units overlap widely; with 13 to 27 patients each no unit can be declared out of control. **Stability over time cannot be assessed**: TinyEHR shifts every date per patient, so calendar trends in volume, missingness or drift (Tate's *Silent Drift*) are not identifiable and are reported as *unmeasured*, not as stable.
+
+&nbsp;
+
+# Stage D: missingness audit
+
+## Indicator bookkeeping
+
+```{r}
+#| label: ibook
+ibook |> rename(Item = item, Count = value) |> bms_gt("Protocol indicators versus measurable concepts")
+```
+
+The protocol builds 44 missingness indicators from 44 features, but its 20 vital-sign features come from only **7 vital-sign domains**: the minimum, maximum and mean of one domain are observed or missing together, so those indicators are perfectly collinear. The number of *distinct* missingness signals is 31, and in this cohort only 16 of them vary at all. The "44 indicators" figure overstates the information content (*Metric Mirage*).
+
+## Missingness by concept and subgroup
+
+```{r}
+#| label: heatmap
+#| fig-height: 6
+varying <- const |> filter(!constant) |> pull(concept)
+col_lab <- gsz |> filter(shown) |>
+  mutate(var_lab = recode(variable, sex = "Sex", race_group = "Race", insurance_group = "Insurance", icu_type = "ICU type"),
+         col = paste0(var_lab, ": ", level, " (n=", n_display, ")")) |>
+  select(variable, level, col)
+hm <- miss_sub |>
+  filter(concept %in% varying, shown) |>
+  inner_join(col_lab, by = c("variable", "level")) |>
+  select(concept, col, pct_missing) |>
+  bind_rows(miss_overall |> filter(concept %in% varying) |> transmute(concept, col = paste0("Overall (n=", n_coh, ")"), pct_missing))
+ord <- miss_overall |> filter(concept %in% varying) |> arrange(pct_missing) |> pull(concept)
+ggplot(hm, aes(factor(col, unique(col)), factor(concept, ord), fill = pct_missing)) +
+  geom_tile(colour = "white") +
+  geom_text(aes(label = round(pct_missing)), size = 3, colour = bms$dark_gray) +
+  scale_fill_gradient(low = bms$aqua, high = bms$purple, name = "% missing", limits = c(0, 100)) +
+  labs(title = "Missingness (%) by concept and subgroup", subtitle = "Subgroups with fewer than 10 patients are not shown; concepts observed for every patient are omitted",
+       x = NULL, y = NULL) +
+  theme_bms() + theme(axis.text.x = element_text(angle = 40, hjust = 1))
+```
+
+```{r}
+#| label: const
+const_names <- const |> filter(constant) |> mutate(state = ifelse(all_missing, "all missing", "all observed"))
+```
+
+```{r}
+#| label: spread
+shown_levels <- gsz |> filter(shown) |> count(variable, name = "n_levels")
+spread <- miss_sub |>
+  filter(concept %in% varying, shown) |>
+  group_by(variable, concept) |>
+  summarise(range_pts = max(pct_missing) - min(pct_missing), .groups = "drop") |>
+  group_by(variable) |>
+  slice_max(range_pts, n = 1, with_ties = FALSE) |>
+  ungroup() |>
+  left_join(shown_levels, by = "variable")
+sp <- function(v) spread[spread$variable == v, ]
+```
+
+`r sum(const$constant)` of 31 concepts have constant missingness (all observed: `r sum(const_names$state == "all observed")`; all missing: `r sum(const_names$state == "all missing")`) and are untestable as MDLA indicators; this includes every vital sign except temperature and the routine chemistry panel. Subgroup axes are thin: `r sp("sex")$n_levels` sex levels, `r sp("race_group")$n_levels` race levels, `r sp("insurance_group")$n_levels` insurance levels and `r sp("icu_type")$n_levels` ICU types have at least 10 patients.
+
+Among the subgroups that can be shown, the largest gap in missingness for any one concept is **`r round(sp("icu_type")$range_pts)` percentage points across ICU types** (`r sp("icu_type")$concept`), `r round(sp("sex")$range_pts)` points by sex (`r sp("sex")$concept`), `r round(sp("insurance_group")$range_pts)` points by insurance (`r sp("insurance_group")$concept`) and `r round(sp("race_group")$range_pts)` points by race (`r sp("race_group")$concept`). The care setting (ICU type) therefore shapes which tests are measured more than any demographic axis in this cohort, which is the MDLA concern in miniature: missingness patterns are informative, but with 13 to 52 patients per shown group the gaps are descriptive and carry no inferential weight.
+
+## Correlation among missingness indicators
+
+```{r}
+#| label: phi
+#| fig-height: 6
+ord2 <- unique(phi$x)
+phi |>
+  mutate(x = factor(x, ord2), y = factor(y, rev(ord2))) |>
+  ggplot(aes(x, y, fill = phi)) +
+  geom_tile(colour = "white") +
+  scale_fill_gradient2(low = bms$dark_gray, mid = "white", high = bms$purple, limits = c(-1, 1), name = "Phi") +
+  labs(title = "Correlation of missingness indicators (phi)", subtitle = "Concepts with variable missingness only", x = NULL, y = NULL) +
+  theme_bms() + theme(axis.text.x = element_text(angle = 40, hjust = 1))
+```
+
+Several indicators are identical (phi = 1): hemoglobin, hematocrit and white cell count; PaO2 and PaCO2 (pH is almost identical); ALT, AST and bilirubin; INR and PTT. Lactate follows the blood gases only partly (phi about 0.7). Co-missingness reflects ordering *panels*, so the indicators are not independent features: a model given all of them would see a few clinical order sets, not 44 separate signals.
+
+## Feasibility of the protocol's association tests
+
+```{r}
+#| label: chi
+tibble::tribble(
+  ~Item, ~Value,
+  "Missingness indicators with variable missingness (testable)", as.character(chi$n_testable),
+  "Protocol association tests (Bonferroni divisor)", as.character(chi$n_bonferroni_protocol),
+  "Race groups present / with at least 10 patients", paste0(chi$n_race_groups_gt0, " / ", chi$n_race_groups_ge10),
+  "Median share of chi-square cells with expected count < 5 (%)", as.character(round(chi$median_pct_cells_lt5, 1)),
+  "Indicators where more than 20% of cells have expected count < 5", paste0(chi$n_with_gt20pct_cells_lt5, " of ", chi$n_testable)
+) |>
+  bms_gt("Chi-square testing of missingness against race", "Feasibility only; no p-values are reported")
+```
+
+Every testable indicator violates the usual chi-square validity rule (expected cell count of at least 5 in 80% of cells). **No inferential claim about missingness and race is made**, in line with protocol section 22 Stage D.
+
+&nbsp;
+
+# Fitness for purpose: can the MDLA workflow run?
+
+```{r}
+#| label: feasibility
+feas |>
+  transmute(Requirement = requirement, `Published specification` = protocol, `Available here` = available, Verdict = verdict) |>
+  bms_gt("Protocol requirements against what this dataset can support", "Event counts below 10 are shown as <10") |>
+  tab_style(style = cell_fill(color = bms$peach), locations = cells_body(columns = Verdict, rows = str_detect(Verdict, "Not|Inadequate|fall back|Sparse|Out"))) |>
+  tab_style(style = cell_fill(color = bms$amber), locations = cells_body(columns = Verdict, rows = str_detect(Verdict, "Marginal|Not comparable")))
+```
+
+```{r}
+#| label: split
+split |>
+  transmute(Partition = as.character(split), Patients = n_display, Deaths = deaths_display) |>
+  bms_gt("Illustrative 70/15/15 mortality-stratified split", "Seed 42 in base R; does not reproduce scikit-learn's seed 42, shown only to expose the partition sizes")
+```
+
+**Stage E (exploratory model) is not run.** With fewer than 10 in-hospital deaths against 43 clinical predictors (at most 0.21 events per predictor against a rule of thumb of 10), a mortality model would be unidentifiable, and the validation and test partitions contain almost no events, so AUROC, calibration slope and fairness gaps are undefined or arbitrary. Fitting one would produce numbers that look like results; the honest output is this feasibility table.
+
+## Protocol items that cannot be reproduced
+
+| Protocol requirement | Why not |
+|:--|:--|
+| Exact item IDs, units and aggregation per feature | Not in the protocol (section 27); the mapping here is an analyst mapping |
+| 20 vital-sign predictors (versus 21 from 7 domains by 3 statistics) | The protocol itself flags the discrepancy; all 21 are derivable, the omitted one is unknown |
+| Variable-specific plausibility limits | Only creatinine (0.1 to 30) and pH (6.5 to 8.0) are given; all others are assumptions |
+| Elixhauser implementation | Quan ICD-9/10 maps used via the `comorbidity` package; authors' exact code unknown; billing codes are post-discharge |
+| 24-hour urine-output derivation | Ten urine items summed here; the authors' item set is unknown |
+| Troponin excluded for 100% missingness | Not true here; troponin is observed for a minority of patients |
+| Five harmonised race groups, including Asian | No Asian patient; most groups below 10 |
+| Six ICU types | CVICU, MICU/SICU and a step-down unit do not map; "Other" is largest |
+| 50,827-stay cohort and 35,578 / 7,624 / 7,625 split | Cohort is 72 patients |
+| 5-fold stratified grid search, bootstrap CIs, DeLong, fairness criteria, calibration strategies | Event count makes them invalid or undefined |
+| External validation on eICU-CRD | Dataset not available (optional in the protocol) |
+| Time-based checks | All dates are shifted per patient |
+
+&nbsp;
+
+# Right-data assessment
+
+* **Population match.** TinyEHR is a 100-patient convenience subset of one academic centre with an undocumented selection rule (Q1). It shares the study's schema and clinical definitions but not its population size, case mix balance or subgroup structure. The cohort median age is about 60 years, 61% male, and 58% have insurance recorded as "Other/Unknown" under the protocol mapping, which is itself a harmonisation finding.
+* **Definition sensitivity.** The headline cohort and its mortality move materially with the "first admission" and "first ICU stay" rules (section 4.2), so any statistic computed here is conditional on the protocol definition.
+* **Self-referencing checks.** Plausibility, unit and window checks use the same recording system as the data, so agreement shows internal consistency, not accuracy. There is no independent reference (for example a second source for race or for vital signs), hence **accuracy against reality is unmeasured**.
+* **Synthetic additions.** The 4,580 LLM-generated notes are not used by this protocol and are not part of the assessment.
+
+# Cost and risk of the defects
+
+Applying Redman's rule of ten: if a unit of work costs 1 on a perfect record and 10 on a defective one, a dataset with `r fmt1(100 - pf$perfect_pct)`% defective records costs about `r fmt1(pf$perfect_pct / 100 + (1 - pf$perfect_pct / 100) * 10)` times the ideal; without the race defect, about `r fmt1(pf_norace$perfect_pct / 100 + (1 - pf_norace$perfect_pct / 100) * 10)` times. For a conference demonstration the cost is analyst time spent on race harmonisation and manual review. For an actual fairness study the cost is larger and not in rework but in **decision risk**: a race-stratified fairness result built on a field that is unknown for one patient in seven can mislabel groups and bias the very subgroup gaps the study sets out to measure.
+
+# Root causes and failure pattern
+
+| Top error | Where it enters | Failure pattern | Owner of the process step |
+|:--|:--|:--|:--|
+| Race missing or unknown | Registration and admission workflow; race is self-report or staff-entered and recorded per admission | *Proxy Trap*: an administrative field treated as a demographic truth | Hospital patient access and registration (BIDMC); for TinyEHR, the dataset maintainers |
+| ICU end time after hospital discharge | Two systems (ADT transfers and ICU information system) with unsynchronised clocks | Cross-system timing mismatch | Data integration team |
+| Missing temperature, sparse laboratory values | Clinician ordering behaviour (selective testing) | Informative missingness, the object of the MDLA study | Clinical practice; not a defect to clean |
+| Unit variation (Celsius versus Fahrenheit) | Two charting items for the same concept | Hidden multi-source coding | Documentation owner of the item dictionary |
+
+&nbsp;
+
+# Recommendations
+
+1. **Prevent at source.** For any real application, capture race through a single validated self-report workflow with a recorded "declined" reason, and record it once per patient. For the ICU-stay and admission timestamps, require that stay end times not exceed discharge at load time.
+2. **Clean, and say so.** Keep the unit-harmonisation, plausibility and 24-hour-window steps as a separate, logged stage before aggregation (protocol section 11) and publish the plausibility limits used. Treat extreme but possible values (for example AST above 10,000) as evidence to inspect, not to delete.
+3. **Control going forward.** Re-run this pipeline on every refresh; chart the perfect-record rate (p-chart) once more than one release exists; add checkpoints that stop unvalidated data flowing to the model stage; display the race-unknown rate beside any fairness metric.
+4. **For the conference demonstration.** Present the finding as *"an autonomous workflow decided that the dataset is fit for Stages A to D and not for Stage E, and said why"*, which is the protocol's own preferred question. Do not report model or fairness numbers.
+5. **For a genuine reproduction**, obtain the full MIMIC-IV v2.2 (credentialed access) and the authors' code for item IDs, limits, Elixhauser and the 20-versus-21 vital-sign question.
+
+&nbsp;
+
+# Answers to the protocol's twenty data-quality questions
+
+```{r}
+#| label: twenty
+ans <- tibble::tribble(
+  ~`#`, ~Question, ~Finding,
+  1, "Age at ICU admission derivable reliably?", "Yes: anchor_age + (ICU year - anchor_year); all values 18 to 91; admission dates coherent with anchor_year. Cap at 91 (not 300).",
+  2, "Selected stay is the first stay of the first admission?", "Yes, by construction and tested; 26 patients drop because the first admission has no ICU stay.",
+  3, "ICU admission and discharge timestamps consistent?", "outtime > intime always; ICU end exceeds hospital discharge for 22 of 140 stays; `los` differs from timestamps for a few stays.",
+  4, "Does every index stay last at least four hours?", "Yes after filtering; 2 stays removed. Four-hour rule evaluated from timestamps.",
+  5, "Mortality at the admission level?", "Yes; flag, deathtime, discharge location and dod agree.",
+  6, "Predictors restricted to the first 24 hours?", "Yes after filtering; most events lie outside the window and some ICU events precede ICU admission.",
+  7, "Several source codes for one concept?", "Yes: blood pressure, respiratory rate, temperature, troponin and five laboratory concepts.",
+  8, "Units consistent across codes?", "Yes except temperature (Celsius and Fahrenheit items).",
+  9, "Protocol variables that cannot be reproduced?", "See the table of non-reproducible items.",
+  10, "Predictors completely absent?", "None.",
+  11, "Predictors sparsely measured?", "ALT, AST, bilirubin, albumin and troponin (60 to 72% missing); lactate and blood gases 39 to 43%.",
+  12, "Measurement frequency differs across demographic groups?", "Descriptive only: differences by ICU type, sex, insurance and race are shown, but only two race groups have 10 or more patients, so none can be tested.",
+  13, "Values physiologically plausible?", "Yes apart from a few impossible MAP, AST and similar values removed by the filter.",
+  14, "Extreme values driving min and max?", "Yes for MAP (impossible readings); AST/ALT extremes are genuine and are cut by the assumed 10,000 limit.",
+  15, "Duplicate events?", "Very few exact duplicates in chart and output events (a handful per item); troponin is charted in both the laboratory and ICU systems (limitation L17).",
+  16, "Events link to valid patients, admissions and stays?", "Yes; no orphan stays; laboratory hadm_id is sometimes null (limitation L11) so labs are linked by patient and time.",
+  17, "Urine output adequately captured?", "Recorded for every patient but with gaps; about 3 in 10 stays below the 50% hour-coverage assumption.",
+  18, "Can the Elixhauser count be reconstructed?", "Yes (31 categories), after removing decimals; diagnoses are post-discharge billing codes.",
+  19, "Missingness indicators created before imputation?", "Yes: indicators are computed from valid-observation counts; no imputation is performed anywhere in this pipeline.",
+  20, "Sample size sufficient for modelling and subgroup analyses?", "No: fewer than 10 events, 72 patients, most subgroups under 10."
+)
+ans |> bms_gt("Protocol section 23 questions answered from the data")
+```
+
+&nbsp;
+
+# Limitations and what was not assessed
+
+* **Accuracy against a reference** was not measured: there is no gold standard, linked source or re-measurement in the data.
+* **Stability over time** was not measured because all dates are shifted per patient (limitations L8, L9).
+* **Plausibility limits** (other than creatinine and pH) and the **race, insurance and ICU-type mappings** are analyst assumptions and are listed in the mapping table.
+* **Notes** (LLM-generated) and the OMOP format were not assessed.
+* **Subgroup counts** below 10 are suppressed, which hides the exact number of deaths; conclusions about event counts are stated as bounds.
+* **TinyEHR is a teaching dataset**; no statement here generalises to MIMIC-IV or to any population.
+* **No peer-reviewed validation of TinyEHR** was found (Database_Context section 7).
+
+# Appendix
+
+## Method and reproducibility
+
+| Item | Value |
+|:--|:--|
+| Protocol | `protocol/MDLA_MIMIC_IV_Reproduction_Protocol.md` (paraphrase of Patel and Beedala, medRxiv, 2026-05-03, not peer reviewed) |
+| Data | TinyEHR v0.2.0, MIMIC format, retrieved 2026-10-08 (upstream commit 442e8dfd) |
+| Skills | `data-quality-evaluation` (Redman, Hoerl, Tate), `tinyehr-context` |
+| Scripts | `code/01_MDLA_Cohort_Features.R`, `code/02_MDLA_DQ_Analysis.R`, `code/03_MDLA_Tests.R`, each run through `.claude/scripts/run_r.sh` |
+| Intermediates | `data/derived/stage-02_cohort/*.fst`, `data/derived/stage-03_features/*.fst` (patient-level, local only) |
+| Report inputs | `reports/outputs/*.rds` (aggregated, small-cell suppressed) |
+| Disclosure control | Counts of 1 to 9 displayed as "<10"; complementary suppression in the baseline table; no patient-level data in this report |
+| Random seed | 42 (illustrative split only) |
+| Timestamps | Data fields ISO 8601 UTC; report dates YYYY-MM-DD |
+
+```{r}
+#| label: stamp
+cat("Report data generated:", hl$generated_utc, "\n")
+cat("Report rendered:", format(Sys.Date(), "%Y-%m-%d"), "\n")
+```
+
+## Unit strings per source code
+
+```{r}
+#| label: units-appendix
+units_tbl |>
+  transmute(Concept = concept, `Item ID` = itemid, `Dictionary label` = dict_label, `Unit string` = unit,
+            Observations = sup(n_obs), `Unit as expected` = sup(n_unit_ok)) |>
+  bms_gt("Observed unit strings per source code, first 24 hours", "Counts of 1 to 9 suppressed")
+```

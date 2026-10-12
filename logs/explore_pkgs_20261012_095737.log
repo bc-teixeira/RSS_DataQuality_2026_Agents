@@ -1,0 +1,14 @@
+also installing the dependencies 'pkgbuild', 'rprojroot', 'diffobj', 'brio', 'desc', 'pkgload', 'praise', 'waldo'
+
+package 'pkgbuild' successfully unpacked and MD5 sums checked
+package 'rprojroot' successfully unpacked and MD5 sums checked
+package 'diffobj' successfully unpacked and MD5 sums checked
+package 'brio' successfully unpacked and MD5 sums checked
+package 'desc' successfully unpacked and MD5 sums checked
+package 'pkgload' successfully unpacked and MD5 sums checked
+package 'praise' successfully unpacked and MD5 sums checked
+package 'waldo' successfully unpacked and MD5 sums checked
+package 'testthat' successfully unpacked and MD5 sums checked
+package 'patchwork' successfully unpacked and MD5 sums checked
+testthat: TRUE
+patchwork: TRUE

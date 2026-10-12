@@ -1,0 +1,54 @@
+
+## tbl_icu_overrun 
+   n median_h    max_h n_gt_24h
+1 22 2.068056 27.02139        3
+
+## tbl_perfect_record 
+                            cde_set n_cde n_records n_perfect perfect_pct meets_97    ci_lo    ci_hi
+1             Index record (5 CDEs)     5        72        61    84.72222    FALSE 74.67750 91.24938
+2   Index + 7 vital signs (12 CDEs)    12        72        59    81.94444    FALSE 71.51944 89.13329
+3     Full analytical set (15 CDEs)    15        72        59    81.94444    FALSE 71.51944 89.13329
+4 Full set excluding race (14 CDEs)    14        72        69    95.83333    FALSE 88.45054 98.57295
+
+## tbl_urine_output 
+  n_stays n_with_record median_hours_covered_pct n_adequate pct_adequate median_first_record_h median_total_ml n_zero_total n_records n_negative n_missing_value n_non_ml
+1      72            72                     68.8         50         69.4                   1.8            1722            1      7286          0               0        0
+                                                                  check   n n_fail
+13                        ICU stay starts inside the admission interval 140      2
+14                          ICU stay ends inside the admission interval 140     22
+16             Age at ICU admission derivable and 18-120 (index cohort)  72      0
+17               Age at admission derivable and 18-120 (all admissions) 275      0
+18 Admission year within 10 years of anchor_year (date-shift coherence) 275      0
+19                                       hospital_expire_flag in {0, 1} 275      0
+            concept n_valid obs_per_pt_median n_obs_valid n_agg_changed_by_filter n_pt_prewindow_gain n_events_cohort n_pre n_in n_post
+1           albumin      20               1.0          22                       0                   9             102    27   22     53
+2               alt      29               1.0          44                       0                   7             237    42   44    151
+3               ast      29               1.0          43                       1                   7             238    42   44    152
+4       bicarbonate      72               2.0         161                       0                   0             830    81  161    588
+5         bilirubin      29               1.0          47                       0                   7             238    41   47    150
+6               bun      72               2.0         161                       0                   0             838    85  161    592
+7          chloride      72               2.0         198                       0                   0             936   108  197    631
+8        creatinine      72               2.0         161                       0                   0             842    86  161    595
+9  elixhauser_count      72               1.0          72                       0                   0              NA    NA   NA     NA
+10        gcs_total      72               6.0         553                       0                   0            5481    15 1670   3796
+11          glucose      72               2.0         249                       0                   0             977   105  247    625
+12       heart_rate      72              26.0        2009                       0                   0            6839    25 2009   4805
+13       hematocrit      71               2.0         248                       0                   1             932   113  245    574
+14       hemoglobin      71               2.0         216                       0                   1             856   106  213    537
+15              inr      62               2.0         132                       0                   4             478    55  132    291
+16          lactate      41               2.0         134                       0                   9             304    29  133    142
+17              map      72              26.0        2082                       3                   0            6838    18 2085   4735
+18            paco2      43               4.0         206                       0                   6             470    43  204    223
+19             pao2      43               4.0         206                       0                   6             470    43  204    223
+20               ph      44               5.0         219                       0                   5             516    43  217    256
+21        platelets      70               2.0         173                       0                   2             779    78  173    528
+22        potassium      72               2.5         269                       0                   0            1035   113  269    653
+23              ptt      62               2.0         137                       0                   4             497    87  137    273
+24        resp_rate      72              29.5        2192                       0                   0            7659    38 2192   5429
+25              sbp      72              26.0        2080                       0                   0            6832    19 2080   4733
+26           sodium      72               2.0         210                       0                   0             949   107  209    633
+27             spo2      72              26.0        1962                       0                   0            6685    25 1962   4698
+28      temperature      70               7.0         599                       0                   0            1937     9  599   1329
+29         troponin      20               2.0          65                       0                   1             139    17   81     41
+30     urine_output      72              16.5        1074                       0                   0            3941     3 1074   2864
+31              wbc      71               2.0         169                       0                   1             767    77  168    522

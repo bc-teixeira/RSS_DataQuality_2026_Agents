@@ -1,0 +1,26 @@
+Step 1: Loading core tables ...
+  -> patients: 100; admissions: 275; ICU stays: 140
+  -> Mapping rows: 74; found in dictionary: 74
+Step 2: Building cohort ...
+  -> Attrition (patients): 100 -> 100 -> 100 -> 74 -> 72 -> 72
+  -> Final analytical cohort: 72 ICU stays / 72 patients; deaths: 4
+Step 3: Extracting observations from chartevents / outputevents / labevents ...
+  -> chartevents rows for mapped items: 84153
+  -> outputevents rows: 9362; urine items: 7286
+  -> labevents rows for mapped items: 43839
+  -> GCS charttimes: 559 (complete triplets: 553)
+  -> Observations in window: 16046; unit mismatch: 40; implausible (unit ok): 25
+Error in `dplyr::inner_join()`:
+! Join columns in `x` must be present in the data.
+✖ Problem with `source`.
+Backtrace:
+    ▆
+ 1. ├─dplyr::distinct(...)
+ 2. ├─dplyr::filter(...)
+ 3. ├─dplyr::inner_join(...)
+ 4. └─dplyr:::inner_join.data.frame(...)
+ 5.   └─dplyr:::join_mutate(...)
+ 6.     └─dplyr:::join_cols(...)
+ 7.       └─dplyr:::check_join_vars(by$x, x_names, by$condition, "x", error_call = error_call)
+ 8.         └─rlang::abort(bullets, call = error_call)
+Execution halted

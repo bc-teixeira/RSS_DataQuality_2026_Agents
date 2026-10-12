@@ -1,0 +1,35 @@
+Step 1: Loading core tables ...
+  -> patients: 100; admissions: 275; ICU stays: 140
+  -> Mapping rows: 74; found in dictionary: 74
+Step 2: Building cohort ...
+  -> Attrition (patients): 100 -> 100 -> 100 -> 74 -> 72 -> 72
+  -> Final analytical cohort: 72 ICU stays / 72 patients; deaths: 4
+Step 3: Extracting observations from chartevents / outputevents / labevents ...
+  -> chartevents rows for mapped items: 84153
+  -> outputevents rows: 9362; urine items: 7286
+  -> labevents rows for mapped items: 43839
+  -> GCS charttimes: 559 (complete triplets: 553)
+  -> Observations in window: 16046; unit mismatch: 40; implausible (unit ok): 25
+Error in `dplyr::summarise()`:
+ℹ In argument: `first_obs_h = safe_stat(rel_h[unit_ok & plausible],
+  min)`.
+ℹ In group 1: `stay_id = 30458995`, `concept = "alt"`.
+Caused by error in `f()`:
+! could not find function "f"
+Backtrace:
+     ▆
+  1. ├─dplyr::summarise(...)
+  2. ├─dplyr:::summarise.grouped_df(...)
+  3. │ └─dplyr:::summarise_cols(.data, dplyr_quosures(...), by, "summarise")
+  4. │   ├─base::withCallingHandlers(...)
+  5. │   └─dplyr:::map(quosures, summarise_eval_one, mask = mask)
+  6. │     └─base::lapply(.x, .f, ...)
+  7. │       └─dplyr (local) FUN(X[[i]], ...)
+  8. │         └─mask$eval_all_summarise(quo)
+  9. │           └─dplyr (local) eval()
+ 10. ├─global safe_stat(rel_h[unit_ok & plausible], min)
+ 11. └─base::.handleSimpleError(...)
+ 12.   └─dplyr (local) h(simpleError(msg, call))
+ 13.     └─dplyr (local) handler(cnd)
+ 14.       └─rlang::abort(message, class = error_class, parent = parent, call = error_call)
+Execution halted

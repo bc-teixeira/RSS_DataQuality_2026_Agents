@@ -1,0 +1,138 @@
+       concept itemid valueuom unit_ok plausible   n
+1          ast  50878     IU/L    TRUE     FALSE   1
+2          inr  51237     <NA>    TRUE     FALSE   1
+3          map 220052     mmHg    TRUE     FALSE   3
+4    platelets  51265     K/uL    TRUE     FALSE   1
+5    potassium  50971    mEq/L    TRUE     FALSE   2
+6          ptt  51275      sec    TRUE     FALSE   1
+7  temperature 223761       °F    TRUE      TRUE 435
+8  temperature 223762       °C    TRUE      TRUE 164
+9     troponin  51003    ng/mL    TRUE     FALSE  16
+10    troponin  51003    ng/mL    TRUE      TRUE  25
+11    troponin 227429    ng/mL   FALSE      TRUE  40
+        concept itemid n_total n_stay_unknown n_hadm_mismatch n_before_stay
+1    heart_rate 220045   13913              0               0            69
+2           sbp 220050    5525              0               0            12
+3           map 220052    5560              0               0            12
+4           sbp 220179    8347              0               0            43
+5           map 220181    8342              0               0            42
+6     resp_rate 220210   13913              0               0            70
+7          spo2 220277   13540              0               0            65
+8     gcs_total 220739    3274              0               0            15
+9   temperature 223761    3379              0               0            23
+10  temperature 223762     391              0               0             0
+11    gcs_total 223900    3266              0               0            15
+12    gcs_total 223901    3251              0               0            14
+13    resp_rate 224690    1331              0               0            18
+14     troponin 227429     121              0               0             7
+15 urine_output 226559    6685              0               0             8
+16 urine_output 226560     496              0               0             5
+17 urine_output 226561      90              0               0             1
+18 urine_output 226567      15              0               0             0
+   n_after_stay n_storetime_before_charttime n_cohort n_cohort_pre_window
+1            14                          103     6839                  25
+2             0                           38     3127                   8
+3             0                           36     3132                   8
+4            12                           29     3705                  11
+5            12                           29     3706                  10
+6            14                           90     6843                  26
+7            12                          110     6685                  25
+8             2                          364     1832                   5
+9             3                          440     1683                   9
+10            0                           31      254                   0
+11            2                          364     1830                   5
+12            2                          362     1819                   5
+13            1                          158      816                  12
+14            4                            0       59                   2
+15            6                         1093     3755                   2
+16            0                           25      179                   1
+17            0                            8        1                   0
+18            0                            2        6                   0
+   n_cohort_in_window n_cohort_post_window n_dup_exact
+1                2009                 4805           0
+2                1013                 2106           0
+3                1015                 2109           0
+4                1067                 2627           0
+5                1070                 2626           1
+6                2012                 4805           1
+7                1962                 4698           4
+8                 558                 1269           0
+9                 435                 1239           0
+10                164                   90           0
+11                557                 1268           0
+12                555                 1259           0
+13                180                  624           0
+14                 40                   17           0
+15                988                 2765           2
+16                 86                   92           0
+17                  0                    1           0
+18                  0                    6           0
+       concept itemid n_total n_hadm_missing n_hadm_other n_cohort_pre_window
+1     chloride  50806      73             12            6                  33
+2      glucose  50809     196             17            7                  43
+3   hematocrit  50810      96              9            5                  36
+4   hemoglobin  50811      96              9            5                  36
+5      lactate  50813     432             53           72                  53
+6        paco2  50818     573             32           75                  64
+7           ph  50820     625             33           80                  65
+8         pao2  50821     573             32           75                  64
+9    potassium  50822     204             24           19                  48
+10      sodium  50824     100             13           15                  35
+11         alt  50861     515            117          161                  74
+12     albumin  50862     250             86           63                  54
+13         ast  50878     517            118          161                  74
+14 bicarbonate  50882    1505            199          472                 144
+15   bilirubin  50885     512            113          161                  71
+16    chloride  50902    1567            203          478                 150
+17  creatinine  50912    1557            236          475                 160
+18     glucose  50931    1431            145          473                 131
+19   potassium  50971    1581            213          484                 150
+20      sodium  50983    1580            214          482                 150
+21    troponin  51003     157             37           40                  32
+22         bun  51006    1546            228          476                 157
+23  hematocrit  51221    1502            212          430                 158
+24  hemoglobin  51222    1408            211          413                 151
+25         inr  51237     761             84          196                 105
+26   platelets  51265    1412            211          416                 150
+27         ptt  51275     787             69          219                 131
+28         wbc  51301    1396            211          412                 149
+29  creatinine  52024       2              2            0                   0
+   n_cohort_in_window n_in_window_hadm_missing n_dup_exact
+1                  25                        0           0
+2                 100                        0           0
+3                  46                        0           0
+4                  46                        0           0
+5                 134                        0           0
+6                 206                        0           0
+7                 219                        0           0
+8                 206                        0           0
+9                  99                        0           0
+10                 38                        0           0
+11                 44                        0           0
+12                 22                        0           0
+13                 44                        0           0
+14                161                        0           0
+15                 47                        0           0
+16                173                        0           0
+17                161                        0           0
+18                149                        0           0
+19                172                        0           0
+20                172                        0           0
+21                 41                        0           0
+22                161                        0           0
+23                202                        0           0
+24                170                        0           0
+25                133                        0           0
+26                174                        0           0
+27                138                        0           0
+28                169                        0           0
+29                  0                        0           0
+# A tibble: 1 × 3
+  n_charttimes n_complete n_incomplete
+         <int>      <int>        <int>
+1          559        553            6
+# A tibble: 1 × 7
+  n_categories_implemented n_adm_with_dx n_dx_rows n_dx_in_dict n_icd9 n_icd10
+                     <dbl>         <int>     <int>        <int>  <int>   <int>
+1                       31            72      1146         1146    785     361
+# ℹ 1 more variable: n_with_decimal <int>

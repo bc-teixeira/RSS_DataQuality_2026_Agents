@@ -1,0 +1,12 @@
+comorbidity installed: TRUE
+fst installed: FALSE
+also installing the dependency 'fstcore'
+
+package 'fstcore' successfully unpacked and MD5 sums checked
+package 'fst' successfully unpacked and MD5 sums checked
+fst after install attempt: TRUE
+testthat: FALSE
+patchwork: FALSE
+scales: TRUE
+knitr: TRUE
+rmarkdown: TRUE

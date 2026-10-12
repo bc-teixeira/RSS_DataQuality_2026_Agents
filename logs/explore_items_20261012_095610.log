@@ -1,0 +1,204 @@
+   itemid label                                    linksto         unitname
+1  229354 Foley Cath Insertion Location            chartevents     <NA>    
+2  223901 GCS - Motor Response                     chartevents     <NA>    
+3  223900 GCS - Verbal Response                    chartevents     <NA>    
+4  220739 GCS - Eye Opening                        chartevents     <NA>    
+5  228112 GCSVerbalApacheIIValue (intubated)       chartevents     <NA>    
+6  226757 GCSMotorApacheIIValue                    chartevents     <NA>    
+7  226758 GCSVerbalApacheIIValue                   chartevents     <NA>    
+8  226756 GCSEyeApacheIIValue                      chartevents     <NA>    
+9  227011 GCSEye_ApacheIV                          chartevents     <NA>    
+10 227012 GCSMotor_ApacheIV                        chartevents     <NA>    
+11 227014 GCSVerbal_ApacheIV                       chartevents     <NA>    
+12 220047 Heart Rate Alarm - Low                   chartevents     bpm     
+13 220046 Heart rate Alarm - High                  chartevents     bpm     
+14 223770 O2 Saturation Pulseoxymetry Alarm - Low  chartevents     %       
+15 223769 O2 Saturation Pulseoxymetry Alarm - High chartevents     %       
+16 226559 Foley                                    outputevents    mL      
+17 226560 Void                                     outputevents    mL      
+18 224688 Respiratory Rate (Set)                   chartevents     insp/min
+19 224690 Respiratory Rate (Total)                 chartevents     insp/min
+20 220277 O2 saturation pulseoxymetry              chartevents     %       
+21 220210 Respiratory Rate                         chartevents     insp/min
+22 224689 Respiratory Rate (spontaneous)           chartevents     insp/min
+23 226755 GcsApacheIIScore                         chartevents     None    
+24 220052 Arterial Blood Pressure mean             chartevents     mmHg    
+25 223761 Temperature Fahrenheit                   chartevents     °F      
+26 223762 Temperature Celsius                      chartevents     °C      
+27 220181 Non Invasive Blood Pressure mean         chartevents     mmHg    
+28 220045 Heart Rate                               chartevents     bpm     
+29 220179 Non Invasive Blood Pressure systolic     chartevents     mmHg    
+30 220050 Arterial Blood Pressure systolic         chartevents     mmHg    
+31 227519 Urine output_ApacheIV                    chartevents     None    
+32 227013 GcsScore_ApacheIV                        chartevents     None    
+33 229351 Foley Catheter                           procedureevents None    
+34 229352 Foley Cath Insertion Date                datetimeevents  <NA>    
+35 229353 Foley Cath Removal Date                  datetimeevents  <NA>    
+36 227429 Troponin-T                               chartevents     None    
+    itemid label                           fluid               category  
+1   50813  Lactate                         Blood               Blood Gas 
+2   50810  Hematocrit, Calculated          Blood               Blood Gas 
+3   52022  Albumin, Blood                  Blood               Blood Gas 
+4   50806  Chloride, Whole Blood           Blood               Blood Gas 
+5   50820  pH                              Blood               Blood Gas 
+6   52028  Hematocrit                      Blood               Blood Gas 
+7   52024  Creatinine, Whole Blood         Blood               Blood Gas 
+8   52452  Potassium, Whole Blood          Blood               Blood Gas 
+9   50811  Hemoglobin                      Blood               Blood Gas 
+10  50824  Sodium, Whole Blood             Blood               Blood Gas 
+11  52027  Glucose, Whole Blood            Blood               Blood Gas 
+12  52442  Lactate                         Blood               Blood Gas 
+13  50818  pCO2                            Blood               Blood Gas 
+14  50809  Glucose                         Blood               Blood Gas 
+15  50821  pO2                             Blood               Blood Gas 
+16  52434  Chloride, Whole Blood           Blood               Blood Gas 
+17  50822  Potassium, Whole Blood          Blood               Blood Gas 
+18  52455  Sodium, Whole Blood             Blood               Blood Gas 
+19  52042  pO2                             Fluid               Blood Gas 
+20  52040  pCO2                            Fluid               Blood Gas 
+21  52041  pH                              Fluid               Blood Gas 
+22  52045  pH, Urine                       Urine               Blood Gas 
+23  52047  Sodium, Urine                   Urine               Blood Gas 
+24  52046  Potassium, Urine                Urine               Blood Gas 
+25  50833  Potassium                       Other Body Fluid    Blood Gas 
+26  50834  Sodium, Body Fluid              Other Body Fluid    Blood Gas 
+27  50832  pO2, Body Fluid                 Other Body Fluid    Blood Gas 
+28  50831  pH                              Other Body Fluid    Blood Gas 
+29  50830  pCO2, Body Fluid                Other Body Fluid    Blood Gas 
+30  51755  White Blood Cells               Blood               Chemistry 
+31  51756  White Blood Cells               Blood               Chemistry 
+32  51641  Hemoglobin  A                   Blood               Chemistry 
+33  50983  Sodium                          Blood               Chemistry 
+34  51640  Hemoglobin                      Blood               Chemistry 
+35  53088  Asparate Aminotransferase       Blood               Chemistry 
+36  50902  Chloride                        Blood               Chemistry 
+37  51638  Hematocrit                      Blood               Chemistry 
+38  53084  Alanine Aminotransferase        Blood               Chemistry 
+39  52610  Potassium                       Blood               Chemistry 
+40  50861  Alanine Aminotransferase (ALT)  Blood               Chemistry 
+41  51704  Platelet Count                  Blood               Chemistry 
+42  50885  Bilirubin, Total                Blood               Chemistry 
+43  51643  Hemoglobin  A2                  Blood               Chemistry 
+44  52623  Sodium                          Blood               Chemistry 
+45  50931  Glucose                         Blood               Chemistry 
+46  51647  Hemoglobin  S                   Blood               Chemistry 
+47  50954  Lactate Dehydrogenase (LD)      Blood               Chemistry 
+48  53154  Lactate                         Blood               Chemistry 
+49  51645  Hemoglobin, Calculated          Blood               Chemistry 
+50  52569  Glucose                         Blood               Chemistry 
+51  52647  Urea Nitrogen                   Blood               Chemistry 
+52  50971  Potassium                       Blood               Chemistry 
+53  50882  Bicarbonate                     Blood               Chemistry 
+54  51646  Hemoglobin  F                   Blood               Chemistry 
+55  50862  Albumin                         Blood               Chemistry 
+56  50878  Asparate Aminotransferase (AST) Blood               Chemistry 
+57  50912  Creatinine                      Blood               Chemistry 
+58  51006  Urea Nitrogen                   Blood               Chemistry 
+59  52546  Creatinine                      Blood               Chemistry 
+60  51003  Troponin T                      Blood               Chemistry 
+61  51675  INR(PT)                         Blood               Chemistry 
+62  52642  Troponin I                      Blood               Chemistry 
+63  51642  Hemoglobin  A1                  Blood               Chemistry 
+64  52535  Chloride                        Blood               Chemistry 
+65  53089  Bilirubin, Total                Blood               Chemistry 
+66  51002  Troponin I                      Blood               Chemistry 
+67  51639  Hematocrit                      Blood               Chemistry 
+68  51644  Hemoglobin  C                   Blood               Chemistry 
+69  53085  Albumin                         Blood               Chemistry 
+70  51941  Glucose, Stool                  Stool               Chemistry 
+71  51937  Creatinine, Stool               Stool               Chemistry 
+72  51064  Potassium, Stool                Stool               Chemistry 
+73  51951  Urea Nitrogen, Stool            Stool               Chemistry 
+74  51061  Bicarbonate, Stool              Stool               Chemistry 
+75  51062  Chloride, Stool                 Stool               Chemistry 
+76  51065  Sodium, Stool                   Stool               Chemistry 
+77  51944  Lactate Dehydrogenase, Stool    Stool               Chemistry 
+78  51927  Albumin, Stool                  Stool               Chemistry 
+79  51932  Bilirubin, Total, Stool         Stool               Chemistry 
+80  51097  Potassium, Urine                Urine               Chemistry 
+81  51070  Albumin/Creatinine, Urine       Urine               Chemistry 
+82  51081  Creatinine, Serum               Urine               Chemistry 
+83  51069  Albumin, Urine                  Urine               Chemistry 
+84  51084  Glucose, Urine                  Urine               Chemistry 
+85  51104  Urea Nitrogen, Urine            Urine               Chemistry 
+86  51080  Creatinine Clearance            Urine               Chemistry 
+87  51100  Sodium, Urine                   Urine               Chemistry 
+88  52730  pH                              Urine               Chemistry 
+89  52703  Albumin, Urine                  Urine               Chemistry 
+90  51078  Chloride, Urine                 Urine               Chemistry 
+91  51981  Glucose                         Urine               Chemistry 
+92  51076  Bicarbonate, Urine              Urine               Chemistry 
+93  51977  Creatinine, Blood               Urine               Chemistry 
+94  51094  pH                              Urine               Chemistry 
+95  51082  Creatinine, Urine               Urine               Chemistry 
+96  50839  Chloride, Ascites               Ascites             Chemistry 
+97  50838  Bilirubin, Total, Ascites       Ascites             Chemistry 
+98  50847  Potassium, Ascites              Ascites             Chemistry 
+99  50837  Bicarbonate, Ascites            Ascites             Chemistry 
+100 50851  Urea Nitrogen, Ascites          Ascites             Chemistry 
+101 50841  Creatinine, Ascites             Ascites             Chemistry 
+102 50835  Albumin, Ascites                Ascites             Chemistry 
+103 50848  Sodium, Ascites                 Ascites             Chemistry 
+104 50843  Lactate Dehydrogenase, Ascites  Ascites             Chemistry 
+105 50842  Glucose, Ascites                Ascites             Chemistry 
+106 51052  Creatinine, Pleural             Pleural             Chemistry 
+107 51046  Albumin, Pleural                Pleural             Chemistry 
+108 51048  Bicarbonate, Pleural            Pleural             Chemistry 
+109 51050  Chloride, Pleural               Pleural             Chemistry 
+110 51058  Sodium, Pleural                 Pleural             Chemistry 
+111 51049  Bilirubin, Total, Pleural       Pleural             Chemistry 
+112 51054  Lactate Dehydrogenase, Pleural  Pleural             Chemistry 
+113 51057  Potassium, Pleural              Pleural             Chemistry 
+114 51053  Glucose, Pleural                Pleural             Chemistry 
+115 51922  Urea Nitrogen, Pleural          Pleural             Chemistry 
+116 51812  Bilirubin, Total, Joint Fluid   Joint Fluid         Chemistry 
+117 51825  Urea Nitrogen, Joint Fluid      Joint Fluid         Chemistry 
+118 51019  Albumin, Joint Fluid            Joint Fluid         Chemistry 
+119 51823  Sodium, Joint Fluid             Joint Fluid         Chemistry 
+120 51022  Glucose, Joint Fluid            Joint Fluid         Chemistry 
+121 51822  Potassium, Joint Fluid          Joint Fluid         Chemistry 
+122 51813  Chloride, Joint Fluid           Joint Fluid         Chemistry 
+123 51021  Creatinine, Joint Fluid         Joint Fluid         Chemistry 
+124 51811  Bicarbonate,Joint Fluid         Joint Fluid         Chemistry 
+125 51025  Albumin, Body Fluid             Other Body Fluid    Chemistry 
+126 51042  Sodium, Body Fluid              Other Body Fluid    Chemistry 
+127 51027  Bicarbonate, Other Fluid        Other Body Fluid    Chemistry 
+128 51028  Bilirubin, Total, Body Fluid    Other Body Fluid    Chemistry 
+129 51045  Urea Nitrogen, Body Fluid       Other Body Fluid    Chemistry 
+130 51030  Chloride, Body Fluid            Other Body Fluid    Chemistry 
+131 51041  Potassium, Body Fluid           Other Body Fluid    Chemistry 
+132 51032  Creatinine, Body Fluid          Other Body Fluid    Chemistry 
+133 51034  Glucose, Body Fluid             Other Body Fluid    Chemistry 
+134 51800  Potassium, CSF                  Cerebrospinal Fluid Chemistry 
+135 51795  Lactate Dehydrogenase, CSF      Cerebrospinal Fluid Chemistry 
+136 51790  Glucose, CSF                    Cerebrospinal Fluid Chemistry 
+137 51787  Creatinine, CSF                 Cerebrospinal Fluid Chemistry 
+138 51782  Bicarbonate, CSF                Cerebrospinal Fluid Chemistry 
+139 51783  Bilirubin, Total, CSF           Cerebrospinal Fluid Chemistry 
+140 51777  Albumin, CSF                    Cerebrospinal Fluid Chemistry 
+141 51801  Sodium, CSF                     Cerebrospinal Fluid Chemistry 
+142 51784  Chloride, CSF                   Cerebrospinal Fluid Chemistry 
+143 51804  Urea Nitrogen, CSF              Cerebrospinal Fluid Chemistry 
+144 51224  Hemoglobin C                    Blood               Hematology
+145 52129  Hemoglobin Other                Blood               Hematology
+146 51237  INR(PT)                         Blood               Hematology
+147 52128  Hemoglobin H Inclusion          Blood               Hematology
+148 51222  Hemoglobin                      Blood               Hematology
+149 51265  Platelet Count                  Blood               Hematology
+150 51221  Hematocrit                      Blood               Hematology
+151 51223  Hemoglobin A2                   Blood               Hematology
+152 51225  Hemoglobin F                    Blood               Hematology
+153 52165  PTT Control                     Blood               Hematology
+154 52166  PTT-LA                          Blood               Hematology
+155 51275  PTT                             Blood               Hematology
+156 52167  PTT mea                         Blood               Hematology
+157 51301  White Blood Cells               Blood               Hematology
+158 52923  PTT                             Blood               Hematology
+159 51491  pH                              Urine               Hematology
+160 51478  Glucose                         Urine               Hematology
+161 51480  Hematocrit                      Urine               Hematology
+162 51115  Hematocrit, Ascites             Ascites             Hematology
+163 51445  Hematocrit, Pleural             Pleural             Hematology
+164 51369  Hematocrit, Joint Fluid         Joint Fluid         Hematology
+165 51422  Hematocrit, Other Fluid         Other Body Fluid    Hematology
+166 52257  Hematocrit, CSF                 Cerebrospinal Fluid Hematology

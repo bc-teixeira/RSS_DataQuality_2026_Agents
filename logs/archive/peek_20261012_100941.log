@@ -1,0 +1,32 @@
+                              label            stat_0
+1  __Age at ICU admission (years)__ 60.0 (48.0, 70.0)
+2                   __Age stratum__              <NA>
+3                             18-44          13 (18%)
+4                             45-64          32 (44%)
+5                             65-74          12 (17%)
+6                              >=75          15 (21%)
+7                           __Sex__              <NA>
+8                            Female          28 (39%)
+9                              Male          44 (61%)
+10  __Race/ethnicity (harmonised)__              <NA>
+11                            White          52 (72%)
+12                            Black               <10
+13                         Hispanic               <10
+14                            Asian            0 (0%)
+15                            Other          13 (18%)
+16                    __Insurance__              <NA>
+17                         Medicare          24 (33%)
+18                         Medicaid               <10
+19                    Other/Unknown          42 (58%)
+20        __ICU type (harmonised)__              <NA>
+21                             MICU          13 (18%)
+22                             SICU          17 (24%)
+23                              CCU               <10
+24                             NICU               <10
+25                            TSICU               <10
+26                            Other          27 (38%)
+27    __ICU length of stay (days)__    2.0 (1.2, 4.9)
+28 __Elixhauser comorbidity count__    3.0 (2.0, 5.0)
+29        __In-hospital mortality__              <NA>
+30                         Survived          68 (94%)
+31                 Died in hospital               <10
